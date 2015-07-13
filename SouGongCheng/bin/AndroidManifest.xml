@@ -88,6 +88,8 @@
                 	<category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
          </activity>
+        <!-- 关于我们 -->
+         <activity android:name="com.sougongcheng.main.ContactUs"/>
 		 <activity
             android:name="com.mob.tools.MobUIShell"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

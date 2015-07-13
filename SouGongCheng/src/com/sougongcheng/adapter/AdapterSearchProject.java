@@ -111,7 +111,7 @@ public class AdapterSearchProject extends BaseAdapter{
 	}
 	
 
-	private void initDatas() {
+	public void initDatas() {
 		isSelected=new HashMap<Integer,Boolean>();
 		for(int i=0;i<mMapList.size();i++)
 		{
@@ -171,12 +171,7 @@ public class AdapterSearchProject extends BaseAdapter{
         viewHolder.news_type.setText(CommenTools.getItemType(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_TYPE).toString()));
         viewHolder.start_time.setText(CommenTools.getItemType(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_START_TIME).toString()));
         viewHolder.end_time.setText(CommenTools.getItemType(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_END_TIME).toString()));
-        String tags="";
-        for(int i=0;i<Integer.parseInt(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_TAGS_NUMS).toString());i++)
-        {
-        	tags+=mMapList.get(position).get("tag"+i).toString();
-        }
-        viewHolder.label.setText(tags);
+        viewHolder.label.setText(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_TAGS).toString());
         viewHolder.heart.setChecked(isSelected.get(position));
         String mtype=mMapList.get(position).get(MConstants.RECOMEND_ITEMS_TYPE).toString();
         String mid=mMapList.get(position).get(MConstants.RECOMEND_ITEMS_ID).toString();

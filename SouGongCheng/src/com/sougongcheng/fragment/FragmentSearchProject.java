@@ -22,6 +22,7 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -158,6 +159,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	private String offsetPostion="0";
 	
 	private ProgressBar my_pb;
+	
+	private boolean isLoadMore=false;
     
 	// 切换当前显示的图片
 	private Handler handler = new Handler() {
@@ -178,10 +181,12 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 				changeDataSource(0);
 			}else if(msg.what==3)
 			{
-				
+				isRefreshing=false;
+				changeDataSource(0);
 			}else if(msg.what==4)
 			{
-				
+				isRefreshing=false;
+				changeDataSource(1);
 			}
 			
 		};
@@ -231,10 +236,11 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, "");
 		
+		actualListView.setVisibility(View.INVISIBLE);
+		
 		getDataSource(0);
 	
 	}
-	
 	
 
 	private void changeDataSource(int j) {
@@ -283,8 +289,16 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		mPager.setAdapter(new MyAdapter());// 设置填充ViewPager页面的适配器
 		// 设置一个监听器，当ViewPager中的页面改变时调用
 		mPager.setOnPageChangeListener(new MyPageChangeListener());
-		
 		}
+		if(isLoadMore&&j!=0)
+		{
+			isLoadMore=false;
+			mMapList.addAll(recommandInfo.items);
+			adapterSearchProject.notifyDataSetChanged();
+			adapterSearchProject.initDatas();
+			
+		}else
+		{
 		mMapList=recommandInfo.items;
 		
 		adapterSearchProject=new AdapterSearchProject(getActivity(), mMapList, 0);
@@ -292,6 +306,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		actualListView.setAdapter(adapterSearchProject);
 		
 		actualListView.setVisibility(View.VISIBLE);
+		}
+		
 		
 
 	}
@@ -441,6 +457,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 		tabStatus(tv_win_bid,line_win_bid,0);
 		
+		actualListView.setVisibility(View.INVISIBLE);
+		
 		if(i==0)
 		{
 			tabStatus(tv_suggest,line_suggest,1);
@@ -486,7 +504,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		{
 		mPoolManager=ThreadPoolManager.getInstance();
 		}
-		actualListView.setVisibility(View.INVISIBLE);
+		offsetPostion="0";
 		mPoolManager.addTask(new Runnable() {
 			public void run() {
 					if(i==0)
@@ -508,7 +526,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						{
 						type="win";
 						}
-						recommandInfo=mServer.getBandsInfo(type, access_token, "10", "0");
+						recommandInfo=mServer.getBandsInfo(type, access_token, "10", offsetPostion);
 					}
 					if(recommandInfo!=null)
 					{
@@ -544,7 +562,6 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		{
 		mPoolManager=ThreadPoolManager.getInstance();
 		}
-		actualListView.setVisibility(View.INVISIBLE);
 		mPoolManager.addTask(new Runnable() {
 			public void run() {
 			
@@ -568,12 +585,6 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						type="win";
 						}
 						recommandInfo=mServer.getBandsInfo(type, access_token, "10", offsetPostion);
-					}
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 					if(recommandInfo!=null)
 					{
@@ -612,34 +623,30 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 			words.setTextColor(getResources().getColor(R.color.tab_strip));
 		}
 	}
-	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+	private class GetDataTask extends AsyncTask<Void, Void, ArrayList<Map<String,Object>>> {
 
 		@Override
-		protected String[] doInBackground(Void... params) {
+		protected ArrayList<Map<String,Object>> doInBackground(Void... params) {
 			// Simulates a background job.
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
-			return mStrings;
+
+			return mMapList;
 		}
 
 		@Override
-		protected void onPostExecute(String[] result) {
-			if(mPullRefreshListView.isHeaderShown())
-			{
-				Toast.makeText(getActivity(), "获取最新数据", Toast.LENGTH_SHORT).show();
-				offsetPostion="0";
-				getDataSource(position);
-			}else if(mPullRefreshListView.isFooterShown())
-			{
-				Toast.makeText(getActivity(), "获取更多数据", Toast.LENGTH_SHORT).show();
-				int nowOffsetPostion=Integer.parseInt(offsetPostion)+10;
-				offsetPostion=nowOffsetPostion+"";
-				getDataSource(position);
-			}
+		protected void onPostExecute(ArrayList<Map<String,Object>> result) {
+				if(mPullRefreshListView.isHeaderShown())
+				{
+					Toast.makeText(getActivity(), "获取最新数据", Toast.LENGTH_SHORT).show();
+					offsetPostion="0";
+					getDataSource(position);
+				}else if(mPullRefreshListView.isFooterShown())
+				{
+					isLoadMore=true;
+					int nowOffsetPostion=Integer.parseInt(offsetPostion)+10;
+					offsetPostion=nowOffsetPostion+"";
+					refreshDataSource(position);
+				}
 			mPullRefreshListView.onRefreshComplete();
-
 			super.onPostExecute(result);
 		}
 	}
@@ -739,17 +746,11 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		public void run() {
 			synchronized (mPager) {
 				System.out.println("currentItem: " + currentItem);
-				currentItem = (currentItem + 1) % imageViews.size();
 				handler.obtainMessage().sendToTarget(); // 通过Handler切换图片
 			}
 		}
 
 	}
-	private String[] mStrings = { "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
-			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-			"Allgauer Emmentaler", "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
-			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-			"Allgauer Emmentaler" };
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {

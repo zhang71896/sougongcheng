@@ -29,6 +29,15 @@
 	    android:layout_height="match_parent"
 	    android:background="@drawable/animation"
 	    >
-        
+        <Button
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/my_white"
+            android:textSize="@dimen/text_lg_size"
+            android:id="@+id/btn_attention"
+            android:text="注 意 事 项"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/submit_selector"
+            />
 	    </RelativeLayout>
     </RelativeLayout>

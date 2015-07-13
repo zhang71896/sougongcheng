@@ -21,8 +21,12 @@ public class MyDataBaseHelper extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-	    String NEWS_TABLE=CreateTableConstants.NEWS_TABLE;
-	    db.execSQL(NEWS_TABLE);
+	    String RECOMMEND_TABLE=CreateTableConstants.RECOMMEND_TABLE;
+	    String COMMENT_TABLE=CreateTableConstants.COMMENT_TABLE;
+	    String SEARCH_MACHINE_TABLE=CreateTableConstants.SEARCH_MACHINE_TABLE;
+	    db.execSQL(RECOMMEND_TABLE);
+	    db.execSQL(COMMENT_TABLE);
+	    db.execSQL(SEARCH_MACHINE_TABLE);
 	}
 
 	@Override

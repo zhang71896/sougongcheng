@@ -99,6 +99,13 @@ public class AdapterComment extends BaseAdapter{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         comments_id=mMapList.get(position).get(MConstants.COMMENTS_ID).toString();
+        if(Integer.parseInt(mMapList.get(position).get(MConstants.COMMENTS_USER_SEX).toString())==1)
+        {
+            viewHolder.iv_header.setBackgroundResource(R.drawable.male);
+        }else
+        {
+            viewHolder.iv_header.setBackgroundResource(R.drawable.female);
+        }
         viewHolder.tv_nick_name.setText(mMapList.get(position).get(MConstants.COMMENTS_USER_NAME).toString());
         viewHolder.tv_content.setText(mMapList.get(position).get(MConstants.COMMENTS_CONTENTS).toString());
         return convertView;

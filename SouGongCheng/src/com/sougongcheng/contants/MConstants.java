@@ -42,7 +42,7 @@ public class MConstants {
 
 	
 	//Ê×Ò³ÍÆ¼ö
-	public static String RECOMEND_ITEMS_TAGS_NUMS="recomend_items_tags_nums";
+	public static String RECOMEND_ITEMS_TAGS="recomend_items_tags";
 	
 	public static String RECOMEND_ITEMS_ID="recomend_items_id";
 	

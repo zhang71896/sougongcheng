@@ -81,7 +81,20 @@ public class LoadingAnimationActivity extends Activity{
 		animLayout.setAnimation(mAnimation);
 		animLayout.startAnimation(mAnimation);
 		
-		
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		JPushInterface.onResume(getApplicationContext());
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		JPushInterface.onPause(getApplicationContext());
 	}
 
 }

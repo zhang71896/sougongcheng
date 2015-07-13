@@ -7,8 +7,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +56,6 @@ public class AdapterMyCircle extends BaseAdapter{
 	private Status status;
 	
 	private String mstate="";
-	
-	private int num_like=0;
 
 	private int mPosition;  
  
@@ -100,7 +100,7 @@ public class AdapterMyCircle extends BaseAdapter{
 		
 		initDatas();
 	}
-	private void initDatas() {
+	public void initDatas() {
 		
 		isSelected=new HashMap<Integer,Boolean>();
 		for(int i=0;i<mMapList.size();i++)
@@ -158,10 +158,18 @@ public class AdapterMyCircle extends BaseAdapter{
         viewHolder.btn_like.setChecked(isSelected.get(position));
         viewHolder.tv_date.setText(mMapList.get(position).get(MConstants.COMMENTS_CREATE_TIME).toString());
         viewHolder.tv_num_like.setText(mMapList.get(position).get(MConstants.COMMENTS_LIKE_NUMS).toString());
+        int number_like=Integer.parseInt(mMapList.get(position).get(MConstants.COMMENTS_LIKE_NUMS).toString()); 
         viewHolder.tv_num_share.setText(mMapList.get(position).get(MConstants.COMMENTS_SHARE_NUMS).toString());
         viewHolder.tv_nick_name.setText(mMapList.get(position).get(MConstants.COMMENTS_USER_NAME).toString());
         viewHolder.tv_content.setText(mMapList.get(position).get(MConstants.COMMENTS_CONTENTS).toString());
-        likeListener=new LikeListener(position,comments_id,viewHolder.btn_like,viewHolder.tv_num_like);
+        likeListener=new LikeListener(position,comments_id,viewHolder.btn_like,viewHolder.tv_num_like,number_like);
+        if(Integer.parseInt(mMapList.get(position).get(MConstants.COMMENTS_USER_SEX).toString())==1)
+        {
+        viewHolder.iv_header.setBackgroundResource(R.drawable.male);
+        }else
+        {
+        viewHolder.iv_header.setBackgroundResource(R.drawable.female);
+        }
         commentListenner=new CommentListenner(position);
         shareListenner=new ShareListenner(position);
         viewHolder.btn_comment.setOnClickListener(commentListenner);
@@ -175,7 +183,8 @@ public class AdapterMyCircle extends BaseAdapter{
          String mid;
          CheckBox mCheckBox;
      	 TextView mLikeNum;
-		public LikeListener(int inPosition,String id,CheckBox checkbox,TextView likeNumTV)
+     	 int mNumLike;
+		public LikeListener(int inPosition,String id,CheckBox checkbox,TextView likeNumTV,int num_like)
 		{
 			mPosition=inPosition;
 			
@@ -185,7 +194,7 @@ public class AdapterMyCircle extends BaseAdapter{
 			
 			mCheckBox=checkbox;
 			
-			num_like=Integer.parseInt(mMapList.get(inPosition).get(MConstants.COMMENTS_LIKE_NUMS).toString());
+			mNumLike=num_like;
 		}
 		@Override
 		public void onClick(View v) {
@@ -193,18 +202,19 @@ public class AdapterMyCircle extends BaseAdapter{
 			if(mCheckBox.isChecked())
 			{
 				mstate="add";
-				mMapList.get(mPosition).put(MConstants.COMMENTS_LIKE_NUMS, num_like+1+"");
-				mLikeNum.setText(num_like+1+"");
+				
+				mMapList.get(mPosition).put(MConstants.COMMENTS_LIKE_NUMS, mNumLike+1+"");
+				mLikeNum.setText(mNumLike+1+"");
 			}else
 			{
 				mstate="del";
-				if(num_like>=1)
+				if(mNumLike>=1)
 				{
-				mMapList.get(mPosition).put(MConstants.COMMENTS_LIKE_NUMS, num_like-1+"");
-				mLikeNum.setText(num_like-1+"");
+				mMapList.get(mPosition).put(MConstants.COMMENTS_LIKE_NUMS, mNumLike-1+"");
+				mLikeNum.setText(mNumLike-1+"");
 				}else
 				{
-				mLikeNum.setText(num_like+"");	
+				mLikeNum.setText(mNumLike+"");	
 				}
 			}
 			mPoolManager.addTask(new Runnable() {
@@ -232,7 +242,6 @@ public class AdapterMyCircle extends BaseAdapter{
 		}
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			Intent intent=new Intent(mContext, CommentActivity.class);
 			intent.putExtra(MConstants.COMMENTS_ID, mMapList.get(mPosition).get(MConstants.COMMENTS_ID).toString());
 			intent.putExtra(MConstants.COMMENTS_USER_ID, mMapList.get(mPosition).get(MConstants.COMMENTS_USER_ID).toString());

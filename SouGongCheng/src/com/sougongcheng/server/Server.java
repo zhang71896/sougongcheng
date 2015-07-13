@@ -147,11 +147,13 @@ public class Server {
          		if(j==5)
          		{
          			JSONArray jsonItemContentsTags=jsonItemContents.getJSONArray(5);
-     				info.put(MConstants.RECOMEND_ITEMS_TAGS_NUMS, jsonItemContentsTags.length());
+     				String str="";
          			for(int z=0;z<jsonItemContentsTags.length();z++)
          			{
 	            			info.put("tag"+z, jsonItemContentsTags.get(z));
+	            			str+=jsonItemContentsTags.get(z);
          			}
+     				info.put(MConstants.RECOMEND_ITEMS_TAGS, str);
          		}else
          		{
 	            		
@@ -301,11 +303,9 @@ public class Server {
 	            		if(j==0)
 	            		{
 	            			info.put(MConstants.RECOMEND_BANNERS_IMAGEURL+i, jsonBannersContents.get(j));
-	            			Log.e("tag", "j=0"+jsonBannersContents.get(j));
 	            		}else if(j==1)
 	            		{
 	            			info.put(MConstants.RECOMEND_BANNERS_GOTOURL+i, jsonBannersContents.get(j));
-	            			Log.e("tag", "j=1"+jsonBannersContents.get(j));
 	            		}
 	            	}
 	            	recommandInfo.banners.add(info);

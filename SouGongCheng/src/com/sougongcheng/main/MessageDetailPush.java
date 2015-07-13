@@ -105,6 +105,7 @@ public class MessageDetailPush extends Activity implements OnClickListener{
 		case R.id.tv_back:
 			Intent intent=new Intent(MessageDetailPush.this, MainAct.class);
 			startActivity(intent);
+			finish();
 			break;
 
 		default:

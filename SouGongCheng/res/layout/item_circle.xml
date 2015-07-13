@@ -57,8 +57,8 @@
             android:button="@null"
             android:background="@drawable/comment"
             android:layout_centerHorizontal="true"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             />
         <CheckBox
             android:id="@+id/btn_like"
@@ -66,8 +66,8 @@
             android:button="@null"
             android:background="@drawable/btn_zan_check"
             android:layout_alignParentLeft="true"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             />
          <TextView
             android:layout_width="wrap_content"
@@ -89,8 +89,8 @@
             android:layout_toLeftOf="@+id/tv_num_share"
             android:background="@drawable/share"
             android:button="@null"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             />
        
         </RelativeLayout>

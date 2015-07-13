@@ -7,48 +7,37 @@
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame" >
     <LinearLayout
-        android:layout_marginTop="@dimen/margin_right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/my_white"
         android:orientation="vertical"
         >
-        <!-- 退出  -->
+        <!-- 昵称  -->
  	<RelativeLayout
- 	    android:id="@+id/rl_exit"
+ 	    android:id="@+id/rl_name"
  	    android:layout_width="match_parent"
  	    android:layout_height="@dimen/line_height"
  	    >
  	    <ImageView
- 	        android:id="@+id/header"
+ 	        android:id="@+id/iv_header"
  	        android:layout_width="@dimen/header_size"
  	        android:layout_height="@dimen/header_size"
  	        android:layout_centerVertical="true"
  	        android:layout_alignParentLeft="true"
    			android:layout_marginLeft="@dimen/margin_left" 	        
-   			android:background="@drawable/header"
+   			android:background="@drawable/male"
  	        />
  	    <TextView
- 	        android:layout_toRightOf="@+id/header"
+ 	        android:layout_toRightOf="@+id/iv_header"
  	        android:layout_marginLeft="@dimen/margin_left"
  	        android:textColor="@color/background_material_dark"
  	        android:layout_centerVertical="true"
- 	        android:id="@+id/exit"
+ 	        android:id="@+id/tv_name"
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content" 
  	        android:textSize="@dimen/text_size"
- 	        android:text="@string/exit"
+ 	        android:text="zs"
  	         />
- 	    <TextView
- 	        android:layout_alignParentRight="true"
- 	        android:layout_marginRight="@dimen/margin_right"
- 	        android:layout_centerVertical="true"
- 	        android:layout_width="wrap_content"
- 	        android:layout_height="wrap_content"
- 	        android:textColor="@color/right_arrow_gray"
- 	        android:textSize="@dimen/right_array_size"
- 	        android:text="@string/right_array"
- 	        />
  	</RelativeLayout>
  	<TextView
  	    android:layout_width="match_parent"
@@ -57,42 +46,33 @@
  	    android:layout_marginLeft="@dimen/margin_right"
  	    />
  	
- 	<!-- 我的收藏 -->
+ 	<!-- 性别 -->
  	<RelativeLayout
- 	    android:id="@+id/rl_store"
+ 	    android:id="@+id/rl_sex"
  	    android:layout_width="match_parent"
  	    android:layout_height="@dimen/line_height"
  	    >
- 	    <ImageView
- 	        android:id="@+id/iv_store"
- 	        android:layout_width="@dimen/other_size"
- 	        android:layout_height="@dimen/other_size"
- 	        android:layout_centerVertical="true"
- 	        android:layout_alignParentLeft="true"
-   			android:layout_marginLeft="@dimen/margin_left" 	        
-   			android:background="@drawable/store"
- 	        />
  	    <TextView
- 	        android:layout_toRightOf="@+id/iv_store"
  	        android:layout_marginLeft="@dimen/margin_left"
  	        android:textColor="@color/background_material_dark"
  	        android:layout_centerVertical="true"
- 	        android:id="@+id/tv_store"
+ 	        android:id="@+id/tv_sex_label"
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content" 
  	        android:textSize="@dimen/text_size"
- 	        android:text="@string/store"
+ 	        android:text="性别"
  	         />
- 	    <TextView
+ 	      <TextView
+ 	        android:layout_marginRight="20dp"
+ 	        android:textColor="@color/background_material_dark"
  	        android:layout_alignParentRight="true"
- 	        android:layout_marginRight="@dimen/margin_right"
  	        android:layout_centerVertical="true"
+ 	        android:id="@+id/tv_sex"
  	        android:layout_width="wrap_content"
- 	        android:layout_height="wrap_content"
- 	        android:textColor="@color/right_arrow_gray"
- 	        android:textSize="@dimen/right_array_size"
- 	        android:text="@string/right_array"
- 	        />
+ 	        android:layout_height="wrap_content" 
+ 	        android:textSize="@dimen/text_size"
+ 	        android:text="男"
+ 	         />
  	</RelativeLayout>
  	<TextView
  	    android:layout_width="match_parent"
@@ -100,43 +80,33 @@
  	    android:background="@color/line_gray"
  	    android:layout_marginLeft="@dimen/margin_right"
  	    />
- 	
- 	<!-- 每日推荐 -->
+ 		<!-- 我的收藏 -->
  	<RelativeLayout
- 	    android:id="@+id/rl_suggest"
+ 	    android:id="@+id/rl_account"
  	    android:layout_width="match_parent"
  	    android:layout_height="@dimen/line_height"
  	    >
- 	    <ImageView
- 	        android:id="@+id/iv_suggest"
- 	        android:layout_width="@dimen/other_size"
- 	        android:layout_height="@dimen/other_size"
- 	        android:layout_centerVertical="true"
- 	        android:layout_alignParentLeft="true"
-   			android:layout_marginLeft="@dimen/margin_left" 	        
-   			android:background="@drawable/like"
- 	        />
  	    <TextView
- 	        android:layout_toRightOf="@+id/iv_suggest"
  	        android:layout_marginLeft="@dimen/margin_left"
  	        android:textColor="@color/background_material_dark"
  	        android:layout_centerVertical="true"
- 	        android:id="@+id/tv_suggest"
+ 	        android:id="@+id/tv_tel"
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content" 
  	        android:textSize="@dimen/text_size"
- 	        android:text="@string/suggest"
+ 	        android:text="手机号"
  	         />
- 	    <TextView
+ 	      <TextView
+ 	        android:layout_marginRight="20dp"
+ 	        android:textColor="@color/background_material_dark"
  	        android:layout_alignParentRight="true"
- 	        android:layout_marginRight="@dimen/margin_right"
  	        android:layout_centerVertical="true"
+ 	        android:id="@+id/tv_tel_content"
  	        android:layout_width="wrap_content"
- 	        android:layout_height="wrap_content"
- 	        android:textColor="@color/right_arrow_gray"
- 	        android:textSize="@dimen/right_array_size"
- 	        android:text="@string/right_array"
- 	        />
+ 	        android:layout_height="wrap_content" 
+ 	        android:textSize="@dimen/text_size"
+ 	        android:text="15208266461"
+ 	         />
  	</RelativeLayout>
  	<TextView
  	    android:layout_width="match_parent"
@@ -146,29 +116,19 @@
  	    />
  	<!-- 最近浏览-->
  	<RelativeLayout
- 	    android:id="@+id/rl_latest_view"
+ 	    android:id="@+id/rl_modify_ps"
  	    android:layout_width="match_parent"
  	    android:layout_height="@dimen/line_height"
  	    >
- 	    <ImageView
- 	        android:id="@+id/iv_latest_view"
- 	        android:layout_width="@dimen/other_size"
- 	        android:layout_height="@dimen/other_size"
- 	        android:layout_centerVertical="true"
- 	        android:layout_alignParentLeft="true"
-   			android:layout_marginLeft="@dimen/margin_left" 	        
-   			android:background="@drawable/latestview"
- 	        />
  	    <TextView
- 	        android:layout_toRightOf="@+id/iv_latest_view"
  	        android:layout_marginLeft="@dimen/margin_left"
  	        android:textColor="@color/background_material_dark"
  	        android:layout_centerVertical="true"
- 	        android:id="@+id/tv_latest_view"
+ 	        android:id="@+id/tv_modify_ps"
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content" 
  	        android:textSize="@dimen/text_size"
- 	        android:text="@string/latest_view"
+ 	        android:text="修改密码"
  	         />
  	    <TextView
  	        android:layout_alignParentRight="true"
@@ -212,19 +172,9 @@
  	        android:id="@+id/del_storage"
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content" 
- 	        android:textSize="@dimen/text_lg_size"
+ 	        android:textSize="@dimen/text_size"
  	        android:text="@string/del_storage"
  	         />
- 	    <TextView
- 	        android:layout_alignParentRight="true"
- 	        android:layout_marginRight="@dimen/margin_right"
- 	        android:layout_centerVertical="true"
- 	        android:textColor="@color/background_material_dark"
- 	        android:layout_width="wrap_content"
- 	        android:layout_height="wrap_content"
- 	        android:textSize="@dimen/text_size"
- 	        android:text="0.46KB"
- 	        />
  	</RelativeLayout>
  	<TextView
  	    android:layout_width="match_parent"
@@ -246,8 +196,40 @@
  	        android:id="@+id/tv_about"
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content" 
- 	        android:textSize="@dimen/text_lg_size"
+ 	        android:textSize="@dimen/text_size"
  	        android:text="@string/about_us"
+ 	         />
+ 	    <TextView
+ 	        android:layout_alignParentRight="true"
+ 	        android:layout_marginRight="@dimen/margin_right"
+ 	        android:layout_centerVertical="true"
+ 	        android:layout_width="wrap_content"
+ 	        android:layout_height="wrap_content"
+ 	        android:textColor="@color/right_arrow_gray"
+ 	        android:textSize="@dimen/right_array_size"
+ 	        android:text="@string/right_array"
+ 	        />
+ 	</RelativeLayout>
+ 	<TextView
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="1dp"
+ 	    android:background="@color/line_gray"
+ 	    android:layout_marginLeft="@dimen/margin_right"
+ 	    />
+ 		<RelativeLayout
+ 	    android:id="@+id/rl_exit"
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="@dimen/line_height"
+ 	    >
+ 	    <TextView
+ 	        android:layout_marginLeft="@dimen/margin_left"
+ 	        android:textColor="@color/background_material_dark"
+ 	        android:layout_centerVertical="true"
+ 	        android:id="@+id/tv_exit"
+ 	        android:layout_width="wrap_content"
+ 	        android:layout_height="wrap_content" 
+ 	        android:textSize="@dimen/text_size"
+ 	        android:text="@string/exit"
  	         />
  	    <TextView
  	        android:layout_alignParentRight="true"

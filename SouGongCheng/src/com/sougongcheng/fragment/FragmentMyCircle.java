@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -67,21 +68,39 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
     
     private AdapterMyCircle adapterMyCircle;
     
+    private ProgressBar my_pb;
+    
+    private String offsetPostion="0";
     
 	private Handler mHandler=new Handler()
 	{
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==1)
 			{
+				isRefreshing=false;
 				if(commentsInfo.status==0)
 				{
 				mMapList=commentsInfo.comments;
+				my_pb.setVisibility(View.INVISIBLE);
 				adapterMyCircle=new AdapterMyCircle(getActivity(), mMapList);
 				actualListView.setAdapter(adapterMyCircle);
 				actualListView.setVisibility(View.VISIBLE);
 				}else
 				{
-					
+					Toast.makeText(getActivity(), "更新失败", Toast.LENGTH_SHORT).show();
+				}
+			}else if(msg.what==2)
+			{
+				isRefreshing=false;
+				if(commentsInfo.status==0)
+				{
+				mMapList.addAll(commentsInfo.comments);
+				my_pb.setVisibility(View.INVISIBLE);
+				adapterMyCircle.notifyDataSetChanged();
+				adapterMyCircle.initDatas();
+				}else
+				{
+					Toast.makeText(getActivity(), "加载失败", Toast.LENGTH_SHORT).show();
 				}
 			}
 		};
@@ -103,6 +122,8 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 		initViews();
 		
 		initClickListenner();
+		
+		actualListView.setVisibility(View.INVISIBLE);
 		
 		initDatas();
 		
@@ -142,23 +163,51 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 	private void initDatas() {
 		if(NetworkUtils.isNetworkAvailable(getActivity()))
 		{
-			actualListView.setVisibility(View.INVISIBLE);
+			offsetPostion="0";
 			mServer=Server.getInstance();
 			mPoolManager=ThreadPoolManager.getInstance();
 			mPoolManager.addTask(new Runnable() {
 			@Override
 			public void run() {
-				commentsInfo=mServer.getCommments("all", access_token, "10", "0","0");
+				commentsInfo=mServer.getCommments("all", access_token, "10",offsetPostion,"0");
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				if(commentsInfo!=null)
 				{
 				Message message=mHandler.obtainMessage();
 				message.what=1;
+				message.sendToTarget();
+				}
+			}
+		});
+		}else
+		{
+			Toast.makeText(getActivity(), "当前网络不可用", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	private void refreshDatas()
+	{
+		if(NetworkUtils.isNetworkAvailable(getActivity()))
+		{
+			mServer=Server.getInstance();
+			mPoolManager=ThreadPoolManager.getInstance();
+			mPoolManager.addTask(new Runnable() {
+			@Override
+			public void run() {
+				commentsInfo=mServer.getCommments("all", access_token, "10", offsetPostion,"0");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if(commentsInfo!=null)
+				{
+				Message message=mHandler.obtainMessage();
+				message.what=2;
 				message.sendToTarget();
 				}
 			}
@@ -187,42 +236,35 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 		
 		mPullRefreshListView.setMode(Mode.BOTH);
 		
+		my_pb=(ProgressBar) myView.findViewById(R.id.my_pb);
+		
 		
 	}
 	
-	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+	private class GetDataTask extends AsyncTask<Void, Void, ArrayList<Map<String,Object>>> {
 
 		@Override
-		protected String[] doInBackground(Void... params) {
+		protected ArrayList<Map<String,Object>> doInBackground(Void... params) {
 			// Simulates a background job.
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-			}
-			return mStrings;
+			return mMapList;
 		}
 
 		@Override
-		protected void onPostExecute(String[] result) {
+		protected void onPostExecute(ArrayList<Map<String,Object>> result) {
 			if(mPullRefreshListView.isHeaderShown())
 			{
-		/*	mListItems.addFirst("Added after refresh...");*/
+				Toast.makeText(getActivity(), "获取最新数据", Toast.LENGTH_SHORT).show();
+				initDatas();
 			}else if(mPullRefreshListView.isFooterShown())
 			{
-				/*mListItems.addFirst("Added after refresh...");	*/
+				int nowOffsetPostion=Integer.parseInt(offsetPostion)+10;
+				offsetPostion=nowOffsetPostion+"";
+				refreshDatas();
 			}
-			/*mAdapter.notifyDataSetChanged();*/
-			// Call onRefreshComplete when the list has been refreshed.
 			mPullRefreshListView.onRefreshComplete();
-
 			super.onPostExecute(result);
 		}
 	}
-	private String[] mStrings = { "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
-			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-			"Allgauer Emmentaler", "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
-			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-			"Allgauer Emmentaler" };
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
