@@ -55,5 +55,6 @@
     <string name="text_regin_problem">无法登录？</string>
     
     <string name="text_next_step">下一步</string>
-	
+    
+	<string name="text_send">发布</string>
 </resources>

@@ -360,9 +360,7 @@ public class Server {
 	 {
 		 String reqStr=MConstants.URL+"favorite/"+state+"?access_token="+access_token+"&type="+type+"&id="+id;
 		 Log.e("tag","reqStr"+reqStr);
-		 String str = "";
-		 str=getData(reqStr);
-		 return getStatus(str);
+		 return getStatus(reqStr);
 	 }
 	 /** *
 	  * 2.8 ªÒ»°∆¿¬€
@@ -372,12 +370,14 @@ public class Server {
 	  * @param offset
 	  * @return
 	  */
-	 public CommentsInfo getCommments(String type,String access_token,String page_num,String offset)
+	 public CommentsInfo getCommments(String type,String access_token,String page_num,String offset,String parent_id)
 	 {
 		 //http://120.25.224.229:8888/get_comment/favorite?access_token=1-gonglijun&page_num=10&offset=0
-		 String reqStr=MConstants.URL+"get_comment/"+type+"?access_token="+access_token+"&page_num="+page_num+"&offset="+offset;
+		 String reqStr=MConstants.URL+"get_comment/"+type+"?access_token="+access_token+"&page_num="+page_num+"&offset="+offset+"&parent_id="+parent_id;
 		 String str = "";
+		 Log.e("tag", "reqStr:"+reqStr);
 		 str=getData(reqStr);
+		 commentsInfo=new CommentsInfo();
          try {
 			JSONObject jsonObj = new JSONObject(str);
 			int result=Integer.parseInt(jsonObj.getString("status"));
@@ -416,6 +416,12 @@ public class Server {
             		}else if(j==7)
             		{
             			info.put(MConstants.COMMENTS_IS_LIKE, jsonCommentsContents.get(j));
+            		}else if(j==8)
+            		{
+            			info.put(MConstants.COMMENTS_USER_SEX, jsonCommentsContents.get(j));
+            		}else if(j==9)
+            		{
+            			info.put(MConstants.COMMENTS_IS_STORE, jsonCommentsContents.get(j));
             		}
             	}
             	commentsInfo.comments.add(info);
@@ -446,9 +452,8 @@ public class Server {
 	 public Status manageComment(String type,String access_token,String content,String parent_id)
 	 {
 		 String reqStr=MConstants.URL+"comment/"+type+"?access_token="+access_token+"&content="+content+"&parent_id="+parent_id;
-		 String str = "";
-		 str=getData(reqStr);
-		 status=getStatus(str);
+		 Log.e("tag", "reqStr:"+reqStr);
+		 status=getStatus(reqStr);
 		 return status;
 	 }
 	 
@@ -463,7 +468,6 @@ public class Server {
 	 {
 		 String reqStr=MConstants.URL+"comment_like_num/"+type+"?access_token="+access_token+"&id="+id;
 		 String str = "";
-		 str=getData(reqStr);
 		 status=getStatus(str);
 		 return status;
 	 }
@@ -477,9 +481,7 @@ public class Server {
 	 public Status shareComment(String access_token,String id)
 	 {
 		 String reqStr=MConstants.URL+"comment_forward_num/?access_token="+access_token+"&id="+id;
-		 String str = "";
-		 str=getData(reqStr);
-		 status=getStatus(str);
+		 status=getStatus(reqStr);
 		 return status;
 	 }
 	 
@@ -493,9 +495,7 @@ public class Server {
 	 public Status StoreComment(String type,String access_token,String id)
 	 {
 		 String reqStr=MConstants.URL+"comment_favorite/"+type+"?access_token="+access_token+"&id="+id;
-		 String str = "";
-		 str=getData(reqStr);
-		 status=getStatus(str);
+		 status=getStatus(reqStr);
 		 return status;
 	 }
 	 
@@ -545,9 +545,7 @@ public class Server {
 	 public Status selfSearch(String type,String access_token,String keywords)
 	 {
 		 String reqStr=MConstants.URL+"keywords/"+type+"?access_token="+access_token+"&keywords="+keywords;
-		 String str = "";
-		 str=getData(reqStr);
-		 status=getStatus(str);
+		 status=getStatus(reqStr);
 		 return status;
 	 }
 

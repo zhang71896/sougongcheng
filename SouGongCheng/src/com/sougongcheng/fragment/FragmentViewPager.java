@@ -20,7 +20,7 @@ public class FragmentViewPager extends Fragment{
 			Bundle savedInstanceState) {
 		View view = null;
 		try {
-			view = inflater.inflate(R.layout.pager_item, container, false);
+			view = inflater.inflate(R.layout.item_pager, container, false);
 			ImageView mImageView = (ImageView) view.findViewById(R.id.imageView1);
 			Bundle args = getArguments();
 			final int resId = args.getInt("arg");

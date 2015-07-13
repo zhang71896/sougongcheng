@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +17,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sougongcheng.R;
@@ -52,6 +54,10 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 	private EditText search_title;
 	
 	private ImageButton search_btn;
+	
+	private TextView tv_send;
+	
+	
 
 
 	@Override
@@ -76,7 +82,12 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 		rl_my_circle.setOnClickListener(this);
 
 		rl_my_account.setOnClickListener(this);
-
+		
+		search_btn.setOnClickListener(this);
+		
+		tv_send.setOnClickListener(this);
+		
+		search_title.setOnClickListener(this);
 		
 	}
 
@@ -178,7 +189,7 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 		
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
-		setContentView(R.layout.main);
+		setContentView(R.layout.act_main);
 		
 		rl_search_project=(RelativeLayout) findViewById(R.id.rl_search_project);
 
@@ -192,6 +203,8 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 		
 		search_btn=(ImageButton) findViewById(R.id.search_btn);
 		
+		tv_send=(TextView) findViewById(R.id.tv_send);
+		
 		rl_search_project.setBackgroundColor(getResources().getColor(R.color.my_red));
 		
 		rl_my_project.setBackgroundColor(getResources().getColor(R.color.my_gray));
@@ -199,6 +212,7 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 		rl_my_circle.setBackgroundColor(getResources().getColor(R.color.my_gray));
 
 		rl_my_account.setBackgroundColor(getResources().getColor(R.color.my_gray));
+		
 
 	}
 
@@ -217,12 +231,25 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 			break;
 		case R.id.rl_my_circle:
 			mViewPager.setCurrentItem(2);
+			tv_send.setVisibility(View.VISIBLE);
 			switchTabColor(2);
 			break;
 
 		case R.id.rl_my_account:
 			mViewPager.setCurrentItem(3);
 			switchTabColor(3);
+			break;
+			
+		case R.id.tv_send:
+			Intent intent=new Intent(MainAct.this, SendMessageActivity.class);
+			startActivity(intent);
+			break;
+			
+		case R.id.search_btn:
+			
+			break;
+		case R.id.search_title:
+			
 			break;
 		}
 		

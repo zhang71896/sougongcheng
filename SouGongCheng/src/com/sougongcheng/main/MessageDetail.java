@@ -35,7 +35,7 @@ public class MessageDetail extends Activity implements OnClickListener{
 
 	private void initViews() {
 		
-		setContentView(R.layout.message_detail);
+		setContentView(R.layout.act_message_detail);
 		
 		tv_back=(TextView) findViewById(R.id.tv_back);
 		

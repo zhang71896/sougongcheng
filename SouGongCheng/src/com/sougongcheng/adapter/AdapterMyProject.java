@@ -153,7 +153,7 @@ public class AdapterMyProject extends BaseAdapter{
         if (null == convertView)
         {
             viewHolder = new ViewHolder();
-            convertView=mInflater.inflate(R.layout.suggest_item, null);
+            convertView=mInflater.inflate(R.layout.item_suggest, null);
             viewHolder.news_title=(TextView) convertView.findViewById(R.id.news_title);
             viewHolder.news_author=(TextView) convertView.findViewById(R.id.news_author);
             viewHolder.news_type=(TextView) convertView.findViewById(R.id.news_type);
@@ -190,12 +190,11 @@ public class AdapterMyProject extends BaseAdapter{
 		 CheckBox checkBox;
          int mPosition;  
          String mstate;
-         String maccess_token;
          String mtype;
          String mid;
          public MyListener(int inPosition,CheckBox checkbox,String type,String id){  
         	 checkBox=checkbox;
-             mPosition= inPosition;  
+		     mPosition= inPosition;  
              mtype=type;
              mid=id;
          }  

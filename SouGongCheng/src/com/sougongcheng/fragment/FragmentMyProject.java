@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.example.sougongcheng.R;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.sougongcheng.adapter.AdapterMyProject;
 import com.sougongcheng.adapter.AdapterSearchProject;
 import com.sougongcheng.bean.RecommandInfo;
@@ -18,11 +22,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +40,8 @@ import android.widget.ListView;
 public class FragmentMyProject extends Fragment implements OnItemClickListener{
 	
     private ListView actualListView;
+    
+	private PullToRefreshListView mPullRefreshListView;
     
     private ThreadPoolManager mPoolManager;
 	
@@ -52,6 +60,9 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener{
 	private GetShareDatas mGetShareDatas;
 	
 	private String access_token;
+	
+    private boolean isRefreshing=false;
+
 	
 	private BroadcastReceiver mBroadcastReceiver=new BroadcastReceiver() {
 		
@@ -92,7 +103,34 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener{
 		
 		initDatas();
 		
+		initClickListenner();
+		
 		return myView;
+	}
+
+	private void initClickListenner() {
+		mPullRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				if(!isRefreshing)
+				{
+				isRefreshing=true;
+				
+				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+				DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+
+				// Update the LastUpdatedLabel
+				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+				// Do work to refresh the list here.
+				new GetDataTask().execute();
+				
+				}else
+				{
+				mPullRefreshListView.onRefreshComplete();
+				}
+			}
+		});
 	}
 
 	private void initViews() {
@@ -100,7 +138,17 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener{
 
 		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, "");
 		
-		actualListView=(ListView) myView.findViewById(R.id.content_list);
+		mPullRefreshListView = (PullToRefreshListView) myView.findViewById(R.id.content_list);
+		
+		mPullRefreshListView.setFocusable(true);
+		
+		actualListView= mPullRefreshListView.getRefreshableView();
+		
+		actualListView.setFocusable(true);
+		
+		actualListView.setOnItemClickListener(this);
+		
+		mPullRefreshListView.setMode(Mode.BOTH);
 	}
 
 	private void initDatas() {
@@ -141,14 +189,48 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener{
 		
 
 	}
+	
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+
+		@Override
+		protected String[] doInBackground(Void... params) {
+			// Simulates a background job.
+			try {
+				Thread.sleep(4000);
+			} catch (InterruptedException e) {
+			}
+			return mStrings;
+		}
+
+		@Override
+		protected void onPostExecute(String[] result) {
+			if(mPullRefreshListView.isHeaderShown())
+			{
+		/*	mListItems.addFirst("Added after refresh...");*/
+			}else if(mPullRefreshListView.isFooterShown())
+			{
+				/*mListItems.addFirst("Added after refresh...");	*/
+			}
+			/*mAdapter.notifyDataSetChanged();*/
+			// Call onRefreshComplete when the list has been refreshed.
+			mPullRefreshListView.onRefreshComplete();
+
+			super.onPostExecute(result);
+		}
+	}
+	private String[] mStrings = { "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
+			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
+			"Allgauer Emmentaler", "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
+			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
+			"Allgauer Emmentaler" };
+
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		// TODO Auto-generated method stub
-		 String itemId=mMapList.get(position).get(MConstants.RECOMEND_ITEMS_ID).toString();
-		 Log.e("tag", "itemId:"+itemId);
-		 String itemType=mMapList.get(position).get(MConstants.RECOMEND_ITEMS_TYPE).toString();
+		 String itemId=mMapList.get(position-1).get(MConstants.RECOMEND_ITEMS_ID).toString();
+		 String itemType=mMapList.get(position-1).get(MConstants.RECOMEND_ITEMS_TYPE).toString();
 	 	 String url=mServer.getBandsInfoDetail(access_token, itemType, itemId);
 		 Intent intent=new Intent(getActivity(),MessageDetail.class);
 		 intent.putExtra("url", url);

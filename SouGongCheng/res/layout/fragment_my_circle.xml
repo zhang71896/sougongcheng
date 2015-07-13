@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame" >
-          <com.handmark.pulltorefresh.library.PullToRefreshListView
+<com.handmark.pulltorefresh.library.PullToRefreshListView
         android:background="@color/my_white"
         android:layout_below="@+id/tab_menu"
         android:id="@+id/content_list"

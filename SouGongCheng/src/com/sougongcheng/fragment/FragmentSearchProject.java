@@ -1,8 +1,6 @@
 package com.sougongcheng.fragment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +21,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.Layout;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +34,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sougongcheng.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -51,7 +46,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sougongcheng.adapter.AdapterSearchProject;
 import com.sougongcheng.bean.RecommandInfo;
 import com.sougongcheng.contants.MConstants;
-import com.sougongcheng.main.LoginActivity;
 import com.sougongcheng.main.MessageDetail;
 import com.sougongcheng.server.Server;
 import com.sougongcheng.util.GetShareDatas;
@@ -210,11 +204,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	private void initdatas() {
 		
 		mGetShareDatas=GetShareDatas.getInstance(MConstants.USER_INFO, getActivity());
-
 		
 		actualListView= mPullRefreshListView.getRefreshableView();
-		
-		//getDataSource(0);
 		
 		actualListView.setFocusable(true);
 
@@ -248,8 +239,6 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		mPager.setAdapter(new MyAdapter());// 设置填充ViewPager页面的适配器
 		// 设置一个监听器，当ViewPager中的页面改变时调用
 		mPager.setOnPageChangeListener(new MyPageChangeListener());
-		
-		Intent intent=getActivity().getIntent();
 		
 		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, "");
 		
@@ -304,28 +293,12 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 			}
 		});
 		
-		actualListView.setOnItemSelectedListener(onItemSelectedListener);  
 		
 		actualListView.setOnItemClickListener(this);
 		
 		mPullRefreshListView.setMode(Mode.BOTH);
 
 	}
-	private AdapterView.OnItemSelectedListener  onItemSelectedListener =   
-		    new AdapterView.OnItemSelectedListener(){  
-		    @Override  
-		    public void onItemSelected(AdapterView<?> parent, View view,  
-		            int position, long id) {  
-		        //当此选中的item的子控件需要获得焦点时  
-		        parent.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);  
-		        //else parent.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);  
-		    }  
-		      
-		    @Override  
-		    public void onNothingSelected(AdapterView<?> parent) {  
-		        parent.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);  
-		    }  
-		} ;
 	
 	private void initViews() {
 		

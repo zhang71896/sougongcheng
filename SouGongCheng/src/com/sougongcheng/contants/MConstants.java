@@ -74,6 +74,11 @@ public class MConstants {
 	public static String COMMENTS_CREATE_TIME="comments_create_time";
 	
 	public static String COMMENTS_IS_LIKE="comments_is_like";
+	
+	public static String COMMENTS_USER_SEX="comments_user_sex";
+	
+	public static String COMMENTS_IS_STORE="comments_is_store";
+
 
 
 

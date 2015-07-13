@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+       <RelativeLayout
+        android:id="@+id/top_menu"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/my_red" >
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="返回"
+            android:textSize="@dimen/text_lg_size"
+            android:textColor="@color/my_white"
+            />
+        <TextView
+            android:id="@+id/tv_send"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="发布"
+            android:textSize="@dimen/text_lg_size"
+            android:textColor="@color/my_white"
+            />
+    </RelativeLayout>
+    <EditText 
+        android:layout_margin="@dimen/margin_top"
+        android:id="@+id/et_send_content"
+        android:layout_below="@+id/top_menu"
+        android:gravity="top"
+        android:minLines="1"
+        android:textSize="18sp"
+        android:background="@drawable/smssdk_input_bg_focus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="false"
+        android:scrollHorizontally="false"
+        android:inputType="textMultiLine"
+        />
+</RelativeLayout>
