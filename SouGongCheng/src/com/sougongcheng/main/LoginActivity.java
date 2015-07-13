@@ -1,6 +1,15 @@
 package com.sougongcheng.main;
 
-import com.example.sougongcheng.R;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import com.sougongcheng.bean.UserInfo;
 import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.server.Server;
@@ -9,19 +18,7 @@ import com.sougongcheng.util.CommenTools;
 import com.sougongcheng.util.GetShareDatas;
 import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.test.finder.R;
 
 public class LoginActivity extends Activity implements OnClickListener{
 	
@@ -32,7 +29,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 	
 	private EditText et_password;
 	
-	private TextView tv_regin;
+	private Button btn_regin;
 	
 	private Server mServer;
 	
@@ -87,7 +84,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 		
 		btn_login.setOnClickListener(this);
 		
-		tv_regin.setOnClickListener(this);
+		btn_regin.setOnClickListener(this);
 	}
 
 	private void initViews() {
@@ -100,7 +97,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 		
 		et_password=(EditText) findViewById(R.id.et_password);
 		
-		tv_regin=(TextView) findViewById(R.id.tv_regin);
+		btn_regin=(Button) findViewById(R.id.btn_regin);
 	}
 
 	@Override
@@ -147,8 +144,8 @@ public class LoginActivity extends Activity implements OnClickListener{
 			}
 			break;
 
-		case R.id.tv_regin:
-			Intent intent1=new Intent(LoginActivity.this, ReginActivity.class);
+		case R.id.btn_regin:
+			Intent intent1=new Intent(LoginActivity.this, ReginActivity2.class);
 			startActivity(intent1);
 			break;
 		}

@@ -16,12 +16,11 @@ import android.widget.Toast;
 import cn.smssdk.EventHandler;
 import cn.smssdk.OnSendMessageHandler;
 import cn.smssdk.SMSSDK;
-
-import com.example.sougongcheng.R;
 import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.ui.widget.MyProgressDialog;
 import com.sougongcheng.util.CommenTools;
 import com.sougongcheng.util.NetworkUtils;
+import com.test.finder.R;
 
 public class ReginActivity extends Activity implements OnClickListener{
 	
@@ -71,7 +70,6 @@ public class ReginActivity extends Activity implements OnClickListener{
 	@Override
 	public boolean onSendMessage(String arg0, String arg1) {
 		// TODO Auto-generated method stub
-		Log.e("onsendMessage", "arg0:"+arg0+"arg1:"+arg1);
 		Toast.makeText(ReginActivity.this, "获得验证码成功", Toast.LENGTH_SHORT).show();
 		return false;
 	}

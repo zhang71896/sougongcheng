@@ -1,6 +1,5 @@
 package com.sougongcheng.fragment;
 
-import com.example.sougongcheng.R;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import com.test.finder.R;
 
 public class FragmentMyAccount extends Fragment implements OnClickListener{
 	

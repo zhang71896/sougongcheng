@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_lg_size"
+        android:text="这是我的一条说说"
+        />
+   <!--  <com.sougongcheng.ui.widget.SwitchButton
+        android:id="@+id/btn_switch"
+        android:layout_marginTop="@dimen/margin_top"
+        android:layout_toRightOf="@+id/tv_content"
+        android:defaultValue="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:summaryOff="off"
+        android:summaryOn="on"
+        /> -->
+        
+   

@@ -1,7 +1,6 @@
 package com.sougongcheng.ui.widget;
 
 
-import com.example.sougongcheng.R;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,6 +8,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.test.finder.R;
 
 public class MyProgressDialog extends Dialog {
 	private Context context = null;

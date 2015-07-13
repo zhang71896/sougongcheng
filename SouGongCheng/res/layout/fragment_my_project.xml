@@ -24,7 +24,7 @@
             android:background="@color/tab_gray"
             android:layout_centerVertical="true"
             />
-    	    <Button
+    	    <ImageView
     	        android:id="@+id/iv_add"
     	        android:layout_width="30dp"
     	        android:layout_height="30dp"
@@ -38,14 +38,14 @@
     	        android:layout_below="@+id/follower_setting"
     	        android:id="@+id/follower_list"
     	        android:layout_width="match_parent"
-    	        android:layout_height="wrap_content"
+    	        android:layout_height="100dp"
     	        android:background="@color/my_white"
     	        />
     	    <TextView
     	        android:id="@+id/blank_space"
     	       android:layout_below="@+id/follower_list"
     	       android:layout_width="match_parent"
-    	       android:layout_height="40dp" 
+    	       android:layout_height="20dp" 
     	       android:background="@color/my_white"
     	        />
           <TextView
@@ -78,10 +78,5 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    >
-	<com.sougongcheng.ui.widget.ProgressWheel
-      android:id="@+id/progress_wheel"
-      android:layout_width="80dp"
-      android:layout_height="80dp"
-    />
 	</FrameLayout>
     </RelativeLayout>

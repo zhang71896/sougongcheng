@@ -1,8 +1,6 @@
 package com.sougongcheng.ui.widget;
 
 
-import com.example.sougongcheng.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -17,6 +15,8 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+
+import com.test.finder.R;
 
 /**
  * A Material style progress wheel, compatible up to 2.2.

@@ -18,9 +18,9 @@ public class CommenTools {
 	    else return mobiles.matches(telRegex);  
 	   }  
 	
-	public static boolean inputCheck(String str)
+	public static boolean inputCheck(Object str)
 	{
-		if(str==null||TextUtils.isEmpty(str))
+		if(str==null||TextUtils.isEmpty(str.toString()))
 		{
 			return false;
 		}else
@@ -35,6 +35,37 @@ public class CommenTools {
 	    if (TextUtils.isEmpty(psw)) return false;  
 	    else return psw.matches(telRegex);  
 	   }  
+	
+	public static String chToEn(String content)
+	{
+		content=content.replaceAll("招标", "invite");
+		
+		content=content.replaceAll("中标", "win");
+		
+		content=content.replaceAll("代理比选", "compare_org");
+		
+		content=content.replaceAll("项目比选", "compare");
+		
+		
+		
+		return content;
+	}
+	
+	public static String enToCh(String content)
+	{
+		content=content.replaceAll("invite", "招标");
+		
+		content=content.replaceAll("win", "中标");
+		
+		content=content.replaceAll("compare_org", "代理比选");
+		
+		content=content.replaceAll("compare", "项目比选");
+		
+		
+		
+		return content;
+		
+	}
 	public static String getResult(int result)
 	{
 		String resultStr="";

@@ -1,34 +1,24 @@
 package com.sougongcheng.adapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
-import com.example.sougongcheng.R;
-import com.sougongcheng.adapter.AdapterMyProject.ViewHolder;
-import com.sougongcheng.bean.Status;
-import com.sougongcheng.contants.MConstants;
-import com.sougongcheng.main.CommentActivity;
-import com.sougongcheng.server.Server;
-import com.sougongcheng.util.GetShareDatas;
-import com.sougongcheng.util.ThreadPoolManager;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.sougongcheng.bean.Status;
+import com.sougongcheng.contants.MConstants;
+import com.sougongcheng.server.Server;
+import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.ThreadPoolManager;
+import com.test.finder.R;
 
 public class AdapterComment extends BaseAdapter{
 	

@@ -1,18 +1,5 @@
 package com.sougongcheng.main;
 
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
-
-import com.example.sougongcheng.R;
-import com.sougongcheng.bean.Status;
-import com.sougongcheng.contants.MConstants;
-import com.sougongcheng.server.Server;
-import com.sougongcheng.util.CommenTools;
-import com.sougongcheng.util.GetShareDatas;
-import com.sougongcheng.util.ThreadPoolManager;
-
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +10,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sougongcheng.bean.Status;
+import com.sougongcheng.contants.MConstants;
+import com.sougongcheng.server.Server;
+import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.NetworkUtils;
+import com.sougongcheng.util.ThreadPoolManager;
+import com.test.finder.R;
 
 public class SendMessageActivity extends FragmentActivity
 implements OnClickListener{
@@ -121,6 +116,8 @@ implements OnClickListener{
 		}
 
 		private void send() {
+			if(NetworkUtils.isNetworkAvailable(SendMessageActivity.this))
+			{
 			mServer=Server.getInstance();
 			
 			mPoolManager=ThreadPoolManager.getInstance();
@@ -140,6 +137,11 @@ implements OnClickListener{
 					}
 					}
 				});
+			}else
+			{
+				Toast.makeText(SendMessageActivity.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
+
 			}
+		}
 			
 }

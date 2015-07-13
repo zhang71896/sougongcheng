@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">SouGongCheng</string>
+    <string name="app_name">搜工程</string>
     
 	<string name="search_project">搜工程</string>
 	
@@ -36,7 +36,7 @@
 	
 	<string name="tab_win_bid">中标</string>
 	
-	<string name="regin_hint_nick_name">昵称</string>
+	<string name="regin_hint_nick_name">姓名</string>
 	
 	<string name="login_hint_account">账户</string>
 	

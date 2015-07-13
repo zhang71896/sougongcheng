@@ -2,24 +2,9 @@ package com.sougongcheng.main;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
-
-import com.example.sougongcheng.R;
-import com.sougongcheng.adapter.AdapterComment;
-import com.sougongcheng.bean.CommentsInfo;
-import com.sougongcheng.bean.Status;
-import com.sougongcheng.contants.MConstants;
-import com.sougongcheng.server.Server;
-import com.sougongcheng.util.GetShareDatas;
-import com.sougongcheng.util.NetworkUtils;
-import com.sougongcheng.util.ThreadPoolManager;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,6 +20,18 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
+import com.sougongcheng.adapter.AdapterComment;
+import com.sougongcheng.bean.CommentsInfo;
+import com.sougongcheng.bean.Status;
+import com.sougongcheng.contants.MConstants;
+import com.sougongcheng.server.Server;
+import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.NetworkUtils;
+import com.sougongcheng.util.ThreadPoolManager;
+import com.test.finder.R;
 
 public class CommentActivity extends Activity implements OnClickListener{
 	

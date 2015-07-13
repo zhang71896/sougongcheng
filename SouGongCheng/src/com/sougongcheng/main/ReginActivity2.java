@@ -10,14 +10,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sougongcheng.R;
 import com.sougongcheng.bean.AccessStatus;
 import com.sougongcheng.server.Server;
 import com.sougongcheng.util.CommenTools;
 import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
+import com.test.finder.R;
 
 public class ReginActivity2 extends Activity implements OnClickListener{
 
@@ -25,6 +26,8 @@ public class ReginActivity2 extends Activity implements OnClickListener{
 	private EditText et_nick_name;
 	
 	private EditText et_password;
+	
+	private EditText et_account;
 	
 	private Button btn_done;
 	
@@ -41,6 +44,8 @@ public class ReginActivity2 extends Activity implements OnClickListener{
 	private String sex;
 	
 	private AccessStatus accessStatus;
+	
+	private TextView tv_back;
 	
 	private Handler mHandler=new Handler()
 	{
@@ -69,7 +74,10 @@ public class ReginActivity2 extends Activity implements OnClickListener{
 	}
 
 	private void initClickListenner() {
+		
 		btn_done.setOnClickListener(this);
+		
+		tv_back.setOnClickListener(this);
 	}
 
 	private void initViews() {
@@ -85,7 +93,10 @@ public class ReginActivity2 extends Activity implements OnClickListener{
 		
 		sex_female=(RadioButton) findViewById(R.id.sex_female);
 		
-		phoneNums=getIntent().getCharSequenceExtra("phoneNum").toString();
+		tv_back=(TextView) findViewById(R.id.tv_back);
+		
+		et_account=(EditText) findViewById(R.id.et_account);
+		
 		
 		if(sex_male.isChecked())
 		{
@@ -121,17 +132,21 @@ public class ReginActivity2 extends Activity implements OnClickListener{
 			@Override
 			public void run() {
 				
-				accessStatus=mServer.regin(et_nick_name.getText().toString(), et_password.getText().toString(), sex, phoneNums);
+				accessStatus=mServer.regin(et_nick_name.getText().toString(), et_password.getText().toString(), sex, et_account.getText().toString());
 				Message message=mHandler.obtainMessage();
 				message.what=1;
 				message.sendToTarget();
 				}
 			});
 			}
-			}else
+			}
+			else
 			{
 				Toast.makeText(ReginActivity2.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
 			}
+		}else if(v.getId()==R.id.tv_back)
+		{
+			finish();
 		}
 	}
 
@@ -152,6 +167,12 @@ public class ReginActivity2 extends Activity implements OnClickListener{
 		{
 			Toast.makeText(ReginActivity2.this, "密码为6-20位之间的字字符或者数字", Toast.LENGTH_SHORT).show();
 			et_password.requestFocus();
+			return false;
+		}
+		if(!CommenTools.isMobileNO(et_account.getText().toString()))
+		{
+			Toast.makeText(ReginActivity2.this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
+			et_account.requestFocus();
 			return false;
 		}
 		return true;

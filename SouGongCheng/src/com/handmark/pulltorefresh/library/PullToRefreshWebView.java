@@ -15,7 +15,8 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library;
 
-import com.example.sougongcheng.R;
+
+import com.test.finder.R;
 
 import android.annotation.TargetApi;
 import android.content.Context;

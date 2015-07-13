@@ -3,17 +3,6 @@ package com.sougongcheng.adapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.example.sougongcheng.R;
-import com.sougongcheng.adapter.AdapterMyProject.ViewHolder;
-import com.sougongcheng.bean.Status;
-import com.sougongcheng.contants.MConstants;
-import com.sougongcheng.main.CommentActivity;
-import com.sougongcheng.server.Server;
-import com.sougongcheng.util.GetShareDatas;
-import com.sougongcheng.util.ThreadPoolManager;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +18,16 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
+import com.sougongcheng.bean.Status;
+import com.sougongcheng.contants.MConstants;
+import com.sougongcheng.main.CommentActivity;
+import com.sougongcheng.server.Server;
+import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.ThreadPoolManager;
+import com.test.finder.R;
 
 public class AdapterMyCircle extends BaseAdapter{
 	
@@ -235,6 +234,16 @@ public class AdapterMyCircle extends BaseAdapter{
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			Intent intent=new Intent(mContext, CommentActivity.class);
+			intent.putExtra(MConstants.COMMENTS_ID, mMapList.get(mPosition).get(MConstants.COMMENTS_ID).toString());
+			intent.putExtra(MConstants.COMMENTS_USER_ID, mMapList.get(mPosition).get(MConstants.COMMENTS_USER_ID).toString());
+			intent.putExtra(MConstants.COMMENTS_USER_NAME, mMapList.get(mPosition).get(MConstants.COMMENTS_USER_NAME).toString());
+			intent.putExtra(MConstants.COMMENTS_LIKE_NUMS, mMapList.get(mPosition).get(MConstants.COMMENTS_LIKE_NUMS).toString());
+			intent.putExtra(MConstants.COMMENTS_SHARE_NUMS, mMapList.get(mPosition).get(MConstants.COMMENTS_SHARE_NUMS).toString());
+			intent.putExtra(MConstants.COMMENTS_CONTENTS, mMapList.get(mPosition).get(MConstants.COMMENTS_CONTENTS).toString());
+			intent.putExtra(MConstants.COMMENTS_CREATE_TIME, mMapList.get(mPosition).get(MConstants.COMMENTS_CREATE_TIME).toString());
+			intent.putExtra(MConstants.COMMENTS_IS_LIKE, mMapList.get(mPosition).get(MConstants.COMMENTS_IS_LIKE).toString());
+			intent.putExtra(MConstants.COMMENTS_USER_SEX, mMapList.get(mPosition).get(MConstants.COMMENTS_USER_SEX).toString());
+			intent.putExtra(MConstants.COMMENTS_IS_STORE, mMapList.get(mPosition).get(MConstants.COMMENTS_IS_STORE).toString());
 			mContext.startActivity(intent);
 		}
 	 }

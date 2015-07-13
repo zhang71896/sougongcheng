@@ -1,6 +1,5 @@
 package com.sougongcheng.ui.widget;
 
-import com.example.sougongcheng.R;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -9,9 +8,8 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-
+import com.test.finder.R;
 
 public class ClearableAutoCompleteTextView extends EditText {
 

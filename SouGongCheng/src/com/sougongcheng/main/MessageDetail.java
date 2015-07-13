@@ -9,16 +9,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.DownloadListener;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sougongcheng.R;
 import com.sougongcheng.ui.widget.ProgressWebView;
 import com.sougongcheng.util.NetworkUtils;
+import com.test.finder.R;
 
 public class MessageDetail extends Activity implements OnClickListener{
 	

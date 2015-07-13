@@ -11,20 +11,17 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-
-import com.example.sougongcheng.R;
+import android.widget.Toast;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.sougongcheng.adapter.AdapterMyCircle;
 import com.sougongcheng.bean.CommentsInfo;
 import com.sougongcheng.bean.RecommandInfo;
@@ -33,10 +30,10 @@ import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.main.CommentActivity;
 import com.sougongcheng.server.Server;
 import com.sougongcheng.ui.widget.HeartProgressBar;
-import com.sougongcheng.ui.widget.SpotsDialog;
 import com.sougongcheng.util.GetShareDatas;
 import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
+import com.test.finder.R;
 
 public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 	
@@ -70,14 +67,12 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
     
     private AdapterMyCircle adapterMyCircle;
     
-	private SpotsDialog spotsDialog;
     
 	private Handler mHandler=new Handler()
 	{
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==1)
 			{
-				spotsDialog.dismiss();	
 				if(commentsInfo.status==0)
 				{
 				mMapList=commentsInfo.comments;
@@ -116,7 +111,6 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 
 	private void initClickListenner() {
 		
-		
 		mPullRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -149,8 +143,6 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 		if(NetworkUtils.isNetworkAvailable(getActivity()))
 		{
 			actualListView.setVisibility(View.INVISIBLE);
-			spotsDialog=new SpotsDialog(getActivity(), "Мгдижа...");
-			spotsDialog.show();
 			mServer=Server.getInstance();
 			mPoolManager=ThreadPoolManager.getInstance();
 			mPoolManager.addTask(new Runnable() {

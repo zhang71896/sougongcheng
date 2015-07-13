@@ -22,7 +22,6 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +36,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sougongcheng.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -50,10 +48,10 @@ import com.sougongcheng.bean.RecommandInfo;
 import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.main.MessageDetail;
 import com.sougongcheng.server.Server;
-import com.sougongcheng.ui.widget.HeartProgressBar;
 import com.sougongcheng.util.GetShareDatas;
 import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
+import com.test.finder.R;
 
 public class FragmentSearchProject extends Fragment implements OnClickListener, OnItemClickListener{
 	
@@ -74,7 +72,6 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	private ArrayAdapter<String> mAdapter;
 	
     //声明rl
-    
     private RelativeLayout tab_suggest;
     
     private RelativeLayout tab_agent_compare;
@@ -137,6 +134,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	
 	private ArrayList<Map<String,Object>> mMapList;
 	
+	private ArrayList<Map<String,Object>> banerArrayList;
+	
 	private View top_menu;
 	
 	private View top_tab;
@@ -155,7 +154,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 
 	private ImageLoader imageLoader;
 	
-    HeartProgressBar heartProgressBar;
+	private String offsetPostion="0";
     
 	// 切换当前显示的图片
 	private Handler handler = new Handler() {
@@ -168,11 +167,18 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==1)
 			{
-				if(heartProgressBar.isShown())
-				{
-				heartProgressBar.dismiss();
-				}
-				changeDataSource();
+				isRefreshing=false;
+				changeDataSource(1);
+			}else if(msg.what==2)
+			{
+				isRefreshing=false;
+				changeDataSource(0);
+			}else if(msg.what==3)
+			{
+				
+			}else if(msg.what==4)
+			{
+				
 			}
 			
 		};
@@ -219,25 +225,51 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		actualListView= mPullRefreshListView.getRefreshableView();
 		
 		actualListView.setFocusable(true);
+		
+		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, "");
+		
+		getDataSource(0);
+	
+	}
+	
+	
 
+	private void changeDataSource(int j) {
+		// TODO Auto-generated method stub
+	
+		if(j==0)
+		{
+		banerArrayList=recommandInfo.banners;	
+		top_tab.setVisibility(View.VISIBLE);
 		titles = new String[3];
 		
-		titles[0] = "测试1";
+		titles[0] = "";
 		
-		titles[1] = "测试2";
+		titles[1] = "";
 		
-		titles[2] = "测试3";
+		titles[2] = "";
 		
 		imageViews = new ArrayList<ImageView>();
 
 		// 初始化图片资源
 		for (int i = 0; i < 3; i++) {
 			ImageView imageView = new ImageView(getActivity());
-			imageLoader.displayImage("http://120.25.224.229:8080/pics/cm2_daily_banner22x.jpg", imageView, options);
+			imageLoader.displayImage(MConstants.IMAGE_URL+banerArrayList.get(i).get(MConstants.RECOMEND_BANNERS_IMAGEURL+i).toString(), imageView, options);
 			imageView.setScaleType(ScaleType.CENTER_CROP);
 			imageViews.add(imageView);
 		}
-		
+		for(int i=0;i<3;i++)
+		{
+			final Intent intent=new Intent(getActivity(),MessageDetail.class);
+			final String url=banerArrayList.get(i).get(MConstants.RECOMEND_BANNERS_GOTOURL+i).toString();
+			imageViews.get(i).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					intent.putExtra("url",url);
+					 startActivity(intent);
+				}
+			});
+		}
 		dots = new ArrayList<View>();
 		dots.add(myView.findViewById(R.id.v_dot0));
 		dots.add(myView.findViewById(R.id.v_dot1));
@@ -249,17 +281,9 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		// 设置一个监听器，当ViewPager中的页面改变时调用
 		mPager.setOnPageChangeListener(new MyPageChangeListener());
 		
-		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, "");
-		
-	}
-	
-	
-
-	private void changeDataSource() {
-		// TODO Auto-generated method stub
-	
+		}
 		mMapList=recommandInfo.items;
-
+		
 		adapterSearchProject=new AdapterSearchProject(getActivity(), mMapList, 0);
 		
 		actualListView.setAdapter(adapterSearchProject);
@@ -365,7 +389,6 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 		top_tab=myView.findViewById(R.id.tab_menu);
 		
-		heartProgressBar=(HeartProgressBar) myView.findViewById(R.id.progressBar);
 		
 	}
 	
@@ -410,28 +433,32 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 		if(i==0)
 		{
-			top_tab.setVisibility(View.VISIBLE);
 			tabStatus(tv_suggest,line_suggest,1);
+			position=0;
 			getDataSource(0);
 			return;
 		}else if(i==1)
 		{
 			tabStatus(tv_agent_compare,line_agent_compare,1);
+			position=1;
 			getDataSource(1);
 			return;
 		}else if(i==2)
 		{
 			tabStatus(tv_project_compare,line_project_compare,1);
+			position=2;
 			getDataSource(2);
 			return;
 		}else if(i==3)
 		{
 			tabStatus(tv_invite_bids,line_invite_bids,1);
+			position=3;
 			getDataSource(3);
 			return;
 		}else
 		{
 			tabStatus(tv_win_bid,line_win_bid,1);
+			position=4;
 			getDataSource(4);
 			return;
 		}
@@ -449,17 +476,12 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		{
 		mPoolManager=ThreadPoolManager.getInstance();
 		}
-		if(heartProgressBar.isStopped())
-		{
-		heartProgressBar.start();
-		Log.e("tag", "heartProgressBar"+heartProgressBar.isShown()+"");
-		}
 		actualListView.setVisibility(View.INVISIBLE);
 		mPoolManager.addTask(new Runnable() {
 			public void run() {
 					if(i==0)
 					{
-					recommandInfo=mServer.getRecommandInfo(access_token, "10");
+					recommandInfo=mServer.getRecommandInfo(access_token, "2");
 					}else
 					{
 						String type="";
@@ -476,18 +498,18 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						{
 						type="win";
 						}
-						recommandInfo=mServer.getBandsInfo(type, access_token, "10", "10");
+						recommandInfo=mServer.getBandsInfo(type, access_token, "10", "0");
 					}
 					if(recommandInfo!=null)
 					{
-						try {
-							Thread.sleep(2000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 						Message message=mHandler.obtainMessage();
+						if(i==0)
+						{
+						message.what=2;
+						}else
+						{
 						message.what=1;
+						}
 						message.sendToTarget();
 					}
 			}
@@ -499,6 +521,63 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 	}
 
+	
+	private void refreshDataSource(final int i)
+	{
+		if(NetworkUtils.isNetworkAvailable(getActivity()))
+		{
+		if(mServer==null)
+		{
+		mServer=Server.getInstance();
+		}
+		if(mPoolManager==null)
+		{
+		mPoolManager=ThreadPoolManager.getInstance();
+		}
+		actualListView.setVisibility(View.INVISIBLE);
+		mPoolManager.addTask(new Runnable() {
+			public void run() {
+					if(i==0)
+					{
+					recommandInfo=mServer.getRecommandInfo(access_token, "2");
+					}else
+					{
+						String type="";
+						if(i==1)
+						{
+						type="compare_org";
+						}else if(i==2)
+						{
+						type="compare";	
+						}else if(i==3)
+						{
+						type="invite";
+						}else if(i==4)
+						{
+						type="win";
+						}
+						recommandInfo=mServer.getBandsInfo(type, access_token, "10", offsetPostion);
+					}
+					if(recommandInfo!=null)
+					{
+						Message message=mHandler.obtainMessage();
+						if(i==0)
+						{
+						message.what=3;
+						}else
+						{
+						message.what=4;
+						}
+						message.sendToTarget();
+					}
+			}
+			});
+		}else
+		{
+			Toast.makeText(getActivity(), "当前网络不可用", Toast.LENGTH_SHORT).show();
+		}
+		
+	}
 	private void tabStatus(TextView words,TextView line, int type)
 	{
 		
@@ -522,7 +601,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		protected String[] doInBackground(Void... params) {
 			// Simulates a background job.
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 			}
 			return mStrings;
@@ -532,13 +611,16 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		protected void onPostExecute(String[] result) {
 			if(mPullRefreshListView.isHeaderShown())
 			{
-		/*	mListItems.addFirst("Added after refresh...");*/
+				Toast.makeText(getActivity(), "获取最新数据", Toast.LENGTH_SHORT).show();
+				offsetPostion="0";
+				getDataSource(position);
 			}else if(mPullRefreshListView.isFooterShown())
 			{
-				/*mListItems.addFirst("Added after refresh...");	*/
+				Toast.makeText(getActivity(), "获取更多数据", Toast.LENGTH_SHORT).show();
+				int nowOffsetPostion=Integer.parseInt(offsetPostion)+10;
+				offsetPostion=nowOffsetPostion+"";
+				getDataSource(position);
 			}
-			/*mAdapter.notifyDataSetChanged();*/
-			// Call onRefreshComplete when the list has been refreshed.
 			mPullRefreshListView.onRefreshComplete();
 
 			super.onPostExecute(result);

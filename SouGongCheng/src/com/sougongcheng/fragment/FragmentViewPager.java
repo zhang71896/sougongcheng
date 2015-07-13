@@ -2,16 +2,15 @@ package com.sougongcheng.fragment;
 
 import java.lang.reflect.Field;
 
-import com.example.sougongcheng.R;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.test.finder.R;
 
 public class FragmentViewPager extends Fragment{
 

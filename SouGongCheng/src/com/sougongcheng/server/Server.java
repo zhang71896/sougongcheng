@@ -3,6 +3,7 @@ package com.sougongcheng.server;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +18,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+import android.widget.MultiAutoCompleteTextView.CommaTokenizer;
 
 import com.sougongcheng.bean.AccessStatus;
 import com.sougongcheng.bean.CommentsInfo;
+import com.sougongcheng.bean.HotKeyWordsInfo;
 import com.sougongcheng.bean.RecommandInfo;
 import com.sougongcheng.bean.SearchMachine;
 import com.sougongcheng.bean.Status;
@@ -41,6 +44,8 @@ public class Server {
 	private CommentsInfo commentsInfo;
 	
 	private SearchMachine searchMachine;
+	
+	private HotKeyWordsInfo hotKeyWordsInfo;
 	
 	private Server()
 	{
@@ -290,15 +295,17 @@ public class Server {
 	            for(int i=0;i<jsonBanners.length();i++)
 	            {
 	            	Map<String,Object> info=new HashMap<String, Object>();
-	            	JSONArray jsonBannersContents=jsonItems.getJSONArray(i);
+	            	JSONArray jsonBannersContents=jsonBanners.getJSONArray(i);
 	            	for(int j=0;j<jsonBannersContents.length();j++)
 	            	{
 	            		if(j==0)
 	            		{
-	            			info.put(MConstants.RECOMEND_BANNERS_IMAGEURL, jsonBannersContents.get(j));
+	            			info.put(MConstants.RECOMEND_BANNERS_IMAGEURL+i, jsonBannersContents.get(j));
+	            			Log.e("tag", "j=0"+jsonBannersContents.get(j));
 	            		}else if(j==1)
 	            		{
-	            			info.put(MConstants.RECOMEND_BANNERS_GOTOURL, jsonBannersContents.get(j));
+	            			info.put(MConstants.RECOMEND_BANNERS_GOTOURL+i, jsonBannersContents.get(j));
+	            			Log.e("tag", "j=1"+jsonBannersContents.get(j));
 	            		}
 	            	}
 	            	recommandInfo.banners.add(info);
@@ -508,16 +515,17 @@ public class Server {
 	  * @param offset
 	  * @return
 	  */
-	 public RecommandInfo searchKeyWords(String type,String access_token,String keywords,String page_num,String offset)
+	 public RecommandInfo searchKeyWords(String access_token,String type,String area,String trade,String hot,String page_num,String offset)
 	 {
-		 String reqStr=MConstants.URL+"search/"+type+"?access_token="+access_token+"&keywords="+keywords+"&page_num="+page_num+"&offset="+offset;
-		 String str = "";
-		 str=getData(reqStr);
+		 String reqStr=MConstants.URL+"search?access_token="+access_token+"&type="+type+"&area="+area+"&trade="+trade+"&hot="+hot+"&page_num="+page_num+"&offset="+offset;
+		
 		 recommandInfo=new RecommandInfo();
 		try {
+			 String str = "";
+			 str=getData(reqStr);
 			 JSONObject jsonObj = null;
-		     int result=Integer.parseInt(jsonObj.getString("status"));
 			 jsonObj = new JSONObject(str);
+		     int result=Integer.parseInt(jsonObj.getString("status"));
 			 if(result==0)
 			 {
 				  recommandInfo.status=0;
@@ -536,29 +544,51 @@ public class Server {
 	 }
 	 
 	 /** *
-	  * 2.14自定义搜索器
+	  * 2.14 1添加自定义搜索器
 	  * @param type
 	  * @param access_token
 	  * @param keywords
 	  * @return
 	  */
-	 public Status selfSearch(String type,String access_token,String keywords)
+	 public Status addSelfSearch(String access_token,String type,String area,String trade,String hot)
 	 {
-		 String reqStr=MConstants.URL+"keywords/"+type+"?access_token="+access_token+"&keywords="+keywords;
+		 String reqStr="";
+		 reqStr=MConstants.URL+"keywords/add?access_token="+access_token+"&type="+type+"&area="+area+"&trade="+trade+"&hot="+hot;
+		 status=getStatus(reqStr);
+		 return status;
+	 }
+	 
+	 /** *
+	  * 2.14 2删除自定义搜索器
+	  * @param access_token
+	  * @param id
+	  * @return
+	  */
+	 public Status delSelfSearch(String access_token,String id)
+	 {
+		 String reqStr="";
+		 reqStr=MConstants.URL+"keywords/del?access_token="+access_token+"&id="+id;	 
 		 status=getStatus(reqStr);
 		 return status;
 	 }
 
+	 /** *
+	  * 2.15 获取自定义搜索器
+	  * @param access_token
+	  * @param id
+	  * @return
+	  */
 	 public SearchMachine getSearchMachine(String access_token,String id)
 	 {
-		 String reqStr=MConstants.URL+"get_keywords/?access_token="+access_token+"&id="+id;
+		 String reqStr=MConstants.URL+"get_keywords?access_token="+access_token+"&id="+id;
+		 Log.e("tag", "reqStr: "+reqStr);
 		 String str = "";
 		 str=getData(reqStr);
 		 searchMachine=new SearchMachine();
 		 try {
 			 JSONObject jsonObj = null;
-		     int result=Integer.parseInt(jsonObj.getString("status"));
 			 jsonObj = new JSONObject(str);
+		     int result=Integer.parseInt(jsonObj.getString("status"));
 			 if(result==0)
 			 {
 				  searchMachine.status=0;
@@ -566,7 +596,51 @@ public class Server {
 				  searchMachine.keywords=new ArrayList<Map<String,Object>>();
 				  for(int i=0;i<jsonKeyWords.length();i++)
 				  {
-					  
+					  JSONArray jsonKeyWordsContent=(JSONArray) jsonKeyWords.get(i);
+					  HashMap<String,Object> info=new HashMap<String, Object>();
+					  for(int j=0;j<jsonKeyWordsContent.length();j++)
+					  {
+						  if(j==0)
+						  {
+							  info.put(MConstants.SEARCH_MACHINE_ID, jsonKeyWordsContent.get(j));
+						  }else if(j==1)
+						  {
+							  info.put(MConstants.SEARCH_USER_ID, jsonKeyWordsContent.get(j));
+						  }else if(j==2)
+						  {
+							  JSONArray jsonKeyWordsContentArray=(JSONArray) jsonKeyWordsContent.get(j);
+							  info.put(MConstants.SEARCH_BIND_TYPE_NUM,jsonKeyWordsContentArray.length());
+							  for(int z=0;z<jsonKeyWordsContentArray.length();z++)
+							  {
+								  info.put(MConstants.SEARCH_BIND_TYPE+z, jsonKeyWordsContentArray.get(z));
+							  }
+						  }else if(j==3)
+						  {
+							  JSONArray jsonKeyWordsContentArray=(JSONArray) jsonKeyWordsContent.get(j);
+							  info.put(MConstants.SEARCH_BIND_AREA_NUM,jsonKeyWordsContentArray.length());
+							  for(int z=0;z<jsonKeyWordsContentArray.length();z++)
+							  {
+								  info.put(MConstants.SEARCH_BIND_AREA+z, jsonKeyWordsContentArray.get(z));
+							  }
+						  }else if(j==4)
+						  {
+							  JSONArray jsonKeyWordsContentArray=(JSONArray) jsonKeyWordsContent.get(j);
+							  info.put(MConstants.SEARCH_BIND_INDU_NUM,jsonKeyWordsContentArray.length());
+							  for(int z=0;z<jsonKeyWordsContentArray.length();z++)
+							  {
+								  info.put(MConstants.SEARCH_BIND_INDU+z, jsonKeyWordsContentArray.get(z));
+							  }
+						  }else if(j==5)
+						  {
+							  JSONArray jsonKeyWordsContentArray=(JSONArray) jsonKeyWordsContent.get(j);
+							  info.put(MConstants.SEARCH_BIND_KEYWORDS_NUM,jsonKeyWordsContentArray.length());
+							  for(int z=0;z<jsonKeyWordsContentArray.length();z++)
+							  {
+								  info.put(MConstants.SEARCH_BIND_KEYWORDS+z, jsonKeyWordsContentArray.get(z));
+							  }
+						  }
+					  }
+					  searchMachine.keywords.add(info);
 				  }
 				  
 			 }else 
@@ -578,6 +652,103 @@ public class Server {
 			e.printStackTrace();
 		}
 		 return searchMachine;
+	 }
+	 /** *
+	  * 2.16获取热门关键词
+	  * @param type
+	  * @param access_token
+	  * @return
+	  */
+	 public HotKeyWordsInfo getHotKeyWordsInfo(String type,String access_token)
+	 {
+		 String reqStr=MConstants.URL+"get_hotwords/"+type+"?access_token="+access_token;
+		 String str = "";
+		 str=getData(reqStr);
+		 hotKeyWordsInfo=new HotKeyWordsInfo();
+		 JSONObject jsonObj = null;
+		 try {
+			jsonObj = new JSONObject(str);
+			int result=Integer.parseInt(jsonObj.getString("status"));
+			 if(result==0)
+			 {
+				 hotKeyWordsInfo.area=new ArrayList<Map<String,Object>>();
+				 JSONArray jsonAreaArray=jsonObj.getJSONArray("area");
+				 for(int i=0;i<jsonAreaArray.length();i++)
+				 {
+					 HashMap<String,Object> info=new HashMap<String, Object>();
+					 JSONArray jsonAreaArrayContent=(JSONArray) jsonAreaArray.get(i);
+					 for(int j=0;j<jsonAreaArrayContent.length();j++)
+					 {
+					 if(j==0)
+					 {
+					 info.put(MConstants.HOT_KEY_WORDS_AREA_NUMBER, jsonAreaArrayContent.get(j));
+					 }else if(j==1)
+					 {
+					  info.put(MConstants.TYPE, MConstants.AREA);
+					  info.put(MConstants.VALUE, jsonAreaArrayContent.get(j));
+					 }
+					 }
+					 hotKeyWordsInfo.area.add(info);
+				 }
+				 
+				 hotKeyWordsInfo.hot=new ArrayList<Map<String,Object>>();
+				 JSONArray jsonHotArray=jsonObj.getJSONArray("hot");
+				 for(int i=0;i<jsonHotArray.length();i++)
+				 {
+					 HashMap<String,Object> info=new HashMap<String, Object>();
+					 JSONArray jsonHotArrayContent=(JSONArray) jsonHotArray.get(i);
+					 for(int j=0;j<jsonHotArrayContent.length();j++)
+					 {
+					 if(j==0)
+					 {
+					 info.put(MConstants.HOT_KEY_WORDS_HOT_NUMBER, jsonHotArrayContent.get(j));
+					 }else if(j==1)
+					 {
+				      info.put(MConstants.TYPE, MConstants.HOT);
+					  info.put(MConstants.VALUE, jsonHotArrayContent.get(j));
+					 }
+					 }
+					 hotKeyWordsInfo.hot.add(info);
+				 }
+				 
+				 hotKeyWordsInfo.trade=new ArrayList<Map<String,Object>>();
+				 JSONArray jsonTradeArray=jsonObj.getJSONArray("trade");
+				 for(int i=0;i<jsonTradeArray.length();i++)
+				 {
+					 HashMap<String,Object> info=new HashMap<String, Object>();
+					 JSONArray jsonTradeArrayContent=(JSONArray) jsonTradeArray.get(i);
+					 for(int j=0;j<jsonTradeArrayContent.length();j++)
+					 {
+					 if(j==0)
+					 {
+					 info.put(MConstants.HOT_KEY_WORDS_TRADE_NUMBER, jsonTradeArrayContent.get(j));
+					 }else if(j==1)
+					 {
+					 info.put(MConstants.TYPE, MConstants.TRADE);
+					  info.put(MConstants.VALUE, jsonTradeArrayContent.get(j));
+					 }
+					 }
+					 hotKeyWordsInfo.trade.add(info);
+				 }
+				 hotKeyWordsInfo.type=new  ArrayList<Map<String,Object>>();
+				 String [] typeArray={MConstants.TYPE_INVITE,MConstants.TYPE_WIN,MConstants.TYPE_COMPARE,MConstants.TYPE_COMPARE_ORG};
+				 String [] typeCodeArray={"invite","win","compare","compare_org"};
+				 for(int i=0;i<4;i++)
+				 {
+					 HashMap<String,Object> info=new HashMap<String, Object>();
+					 info.put(MConstants.TYPE, MConstants.TYPE);
+					 info.put(MConstants.VALUE, typeArray[i]);
+					 info.put(MConstants.CODE_VALUE,typeCodeArray[i]);
+					 hotKeyWordsInfo.type.add(info);
+				 }
+			 }
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	  
+		 
+		 return hotKeyWordsInfo;
 	 }
 	 
 	 protected String retrieveInputStream(HttpEntity httpEntity) {

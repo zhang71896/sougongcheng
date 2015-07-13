@@ -18,13 +18,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.sougongcheng.R;
+import cn.jpush.android.api.JPushInterface;
+
 import com.sougongcheng.fragment.FragmentMyAccount;
 import com.sougongcheng.fragment.FragmentMyCircle;
 import com.sougongcheng.fragment.FragmentMyProject;
 import com.sougongcheng.fragment.FragmentSearchProject;
+import com.test.finder.R;
 
 
 @SuppressLint("ResourceAsColor") public class MainAct extends FragmentActivity implements OnClickListener{
@@ -57,8 +58,6 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 	
 	private TextView tv_send;
 	
-	
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +188,12 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 		
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
+//		 JPushInterface.setDebugMode(true);
+//		 // 设置开启日志,发布时请关闭日志
+//         JPushInterface.init(this); 
+//		
+//		JPushInterface.resumePush(getApplicationContext());
+		
 		setContentView(R.layout.act_main);
 		
 		rl_search_project=(RelativeLayout) findViewById(R.id.rl_search_project);
@@ -246,10 +251,12 @@ import com.sougongcheng.fragment.FragmentSearchProject;
 			break;
 			
 		case R.id.search_btn:
-			
+			Intent intent1=new Intent(MainAct.this, SearchActivity.class);
+			startActivity(intent1);
 			break;
 		case R.id.search_title:
-			
+			Intent intent2=new Intent(MainAct.this, SearchActivity.class);
+			startActivity(intent2);
 			break;
 		}
 		
