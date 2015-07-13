@@ -1,0 +1,40 @@
+<resources>
+	
+    <dimen name="text_size">14sp</dimen>
+    
+    <dimen name="text_lg_size">18sp</dimen>
+    
+    <dimen name="right_array_size">30sp</dimen>
+    
+    <dimen name="margin_left">30dp</dimen>
+    
+    <dimen name="margin_sm_left">20dp</dimen>
+    
+    <dimen name="margin_other_left">40dp</dimen>
+    
+    <dimen name="margin_right">10dp</dimen>
+    
+    <dimen name="margin_lg_right">20dp</dimen>
+    
+    
+    <dimen name="header_size">45dp</dimen>
+	
+	<dimen name="other_size">30dp</dimen>      
+	
+	<dimen name="line_height">50dp</dimen>  
+	
+	<dimen name="margin_top">10dp</dimen>
+	
+	<!-- 上拉刷新 下拉刷新 -->
+	<dimen name="indicator_right_padding">10dp</dimen>
+	  
+    <dimen name="indicator_corner_radius">12dp</dimen>
+    
+    <dimen name="indicator_internal_padding">4dp</dimen>
+    
+    <dimen name="header_footer_left_right_padding">24dp</dimen>
+    
+    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+    
+    <dimen name="login_word_size">16sp</dimen>
+</resources>

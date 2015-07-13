@@ -1,0 +1,59 @@
+<resources>
+
+    <string name="app_name">SouGongCheng</string>
+    
+	<string name="search_project">搜工程</string>
+	
+	<string name="my_project">我的工程</string>
+	
+	<string name="my_circle">圈子</string>
+	
+	<string name="my_account">账号</string>
+	
+	<string name="exit">退出</string>
+	
+	<string name="right_array">></string>
+	
+	<string name="store">我的收藏</string>
+	
+	<string name="suggest">每日推荐</string>
+	
+	<string name="latest_view">最近浏览</string>
+	
+	<string name="setting">设置</string>
+	
+	<string name="del_storage">删除缓存</string>
+	
+	<string name="about_us">关于我们</string>
+	
+	<string name="tab_suggest">推荐</string>
+	
+	<string name="tab_agent_compare">代理比选</string>
+	
+	<string name="tab_project_compare">项目比选</string>
+	
+	<string name="tab_invite_bids">招标</string>
+	
+	<string name="tab_win_bid">中标</string>
+	
+	<string name="regin_hint_nick_name">昵称</string>
+	
+	<string name="login_hint_account">账户</string>
+	
+    <string name="login_hint_password">密码</string>
+    
+    <string name="regin_hint_mobilenum">手机账号</string>
+    
+    <string name="regin_hint_certify_code">验证码</string>
+    
+    <string name="btn_login">登 录</string>
+    
+    <string name="btn_done">完成</string>
+    
+    <string name="text_regin">新用户</string>
+    
+    <string name="text_regin_problem">无法登录？</string>
+    
+    <string name="text_next_step">下一步</string>
+	
+</resources>
