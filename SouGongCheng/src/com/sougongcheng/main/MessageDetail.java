@@ -2,23 +2,30 @@ package com.sougongcheng.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.webkit.DownloadListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sougongcheng.R;
+import com.sougongcheng.ui.widget.ProgressWebView;
+import com.sougongcheng.util.NetworkUtils;
 
 public class MessageDetail extends Activity implements OnClickListener{
 	
 	
 	private TextView tv_back;
 	
-	private WebView wv_content;
+	private ProgressWebView wv_content;
 	
 	private String url;
 	
@@ -34,12 +41,12 @@ public class MessageDetail extends Activity implements OnClickListener{
 	}
 
 	private void initViews() {
-		
+		requestWindowFeature(Window.FEATURE_PROGRESS);
 		setContentView(R.layout.act_message_detail);
 		
 		tv_back=(TextView) findViewById(R.id.tv_back);
 		
-		wv_content=(WebView) findViewById(R.id.wv_content);
+		wv_content=(ProgressWebView) findViewById(R.id.wv_content);
 		
 	    WebSettings webSettings = wv_content.getSettings();  
 		
@@ -47,16 +54,26 @@ public class MessageDetail extends Activity implements OnClickListener{
         
         webSettings.setAllowFileAccess(true);  
         
-        webSettings.setBuiltInZoomControls(true);  
+        webSettings.setBuiltInZoomControls(true); 
+        if(NetworkUtils.isNetworkAvailable(MessageDetail.this))
+        {
         
         Intent intent=getIntent();
 
         url=intent.getStringExtra("url");
         
-        wv_content.loadUrl(url);    
-        
-        wv_content.setWebViewClient(new webViewClient ());    
-		
+        wv_content.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                if (url != null && url.startsWith("http://"))
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            }
+        });
+        wv_content.loadUrl(url);   
+        }else
+        {
+        	Toast.makeText(MessageDetail.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
+        }
 	}
 
 	@Override
@@ -74,13 +91,6 @@ public class MessageDetail extends Activity implements OnClickListener{
 		
 	}
 
-	 //Web视图    
-    private class webViewClient extends WebViewClient {    
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {    
-            view.loadUrl(url);    
-            return true;    
-        }    
-    }    
     
     @Override   
     //设置回退    

@@ -20,7 +20,7 @@
             android:textColor="@color/my_white"
             />
     </RelativeLayout>
-    <WebView
+    <com.sougongcheng.ui.widget.ProgressWebView
         android:layout_below="@+id/top_menu"
         android:id="@+id/wv_content"
         android:layout_width="match_parent"

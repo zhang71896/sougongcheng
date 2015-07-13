@@ -15,13 +15,18 @@ import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.main.LoginActivity;
 import com.sougongcheng.main.MessageDetail;
 import com.sougongcheng.server.Server;
+import com.sougongcheng.ui.widget.ProgressWheel;
+import com.sougongcheng.ui.widget.SpotsDialog;
+import com.sougongcheng.ui.widget.ProgressWheel.ProgressCallback;
 import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -63,6 +69,9 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener{
 	
     private boolean isRefreshing=false;
 
+    private ProgressWheel progressWheel;
+    
+	private SpotsDialog spotsDialog;
 	
 	private BroadcastReceiver mBroadcastReceiver=new BroadcastReceiver() {
 		
@@ -149,6 +158,9 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener{
 		actualListView.setOnItemClickListener(this);
 		
 		mPullRefreshListView.setMode(Mode.BOTH);
+		
+        progressWheel = (ProgressWheel)myView.findViewById(R.id.progress_wheel);
+
 	}
 
 	private void initDatas() {
@@ -162,9 +174,16 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener{
 		{
 		mPoolManager=ThreadPoolManager.getInstance();
 		}
-		
+		if(NetworkUtils.isNetworkAvailable(getActivity()))
+		{
 		mPoolManager.addTask(new Runnable() {
 			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				recommandInfo=mServer.getBandsInfo(type, access_token, "10", "0");
 				if(recommandInfo!=null)
 				{
@@ -174,6 +193,10 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener{
 				}
 			}
 		});
+		}else
+		{
+			Toast.makeText(getActivity(), "当前网络不可用", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	private void changeDataSource() {

@@ -16,6 +16,7 @@ import com.example.sougongcheng.R;
 import com.sougongcheng.bean.AccessStatus;
 import com.sougongcheng.server.Server;
 import com.sougongcheng.util.CommenTools;
+import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
 
 public class ReginActivity2 extends Activity implements OnClickListener{
@@ -101,6 +102,8 @@ public class ReginActivity2 extends Activity implements OnClickListener{
 		{
 			if(inputCheck())
 			{
+				if(NetworkUtils.isNetworkAvailable(ReginActivity2.this))
+				{
 			if(sex_male.isChecked())
 			{
 				sex="1";
@@ -124,6 +127,10 @@ public class ReginActivity2 extends Activity implements OnClickListener{
 				message.sendToTarget();
 				}
 			});
+			}
+			}else
+			{
+				Toast.makeText(ReginActivity2.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

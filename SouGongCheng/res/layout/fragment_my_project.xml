@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,9 +6,62 @@
     android:orientation="vertical"
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame" >
+    	<RelativeLayout
+    	    android:id="@+id/follower_setting"
+    	    android:layout_marginTop="@dimen/margin_top"
+    	    android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_height="40dp"
+            android:background="@color/tab_gray"
+    	    >
+    	    <TextView
+            android:id="@+id/tv_follower_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="跟踪器设置"
+            android:layout_marginLeft="@dimen/margin_top"
+            android:textSize="@dimen/text_lg_size"
+            android:background="@color/tab_gray"
+            android:layout_centerVertical="true"
+            />
+    	    <Button
+    	        android:id="@+id/iv_add"
+    	        android:layout_width="30dp"
+    	        android:layout_height="30dp"
+    	        android:background="@drawable/btn_plus_selector"
+    	        android:layout_alignParentRight="true"
+    	        android:layout_centerVertical="true"
+    	        android:layout_marginRight="@dimen/margin_top"
+    	        />
+    	    </RelativeLayout>
+    	     <ListView
+    	        android:layout_below="@+id/follower_setting"
+    	        android:id="@+id/follower_list"
+    	        android:layout_width="match_parent"
+    	        android:layout_height="wrap_content"
+    	        android:background="@color/my_white"
+    	        />
+    	    <TextView
+    	        android:id="@+id/blank_space"
+    	       android:layout_below="@+id/follower_list"
+    	       android:layout_width="match_parent"
+    	       android:layout_height="40dp" 
+    	       android:background="@color/my_white"
+    	        />
+          <TextView
+            android:layout_below="@+id/blank_space"
+            android:id="@+id/tv_my_store"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我的收藏"
+            android:textSize="@dimen/text_lg_size"
+            android:background="@color/tab_gray"
+            android:paddingLeft="@dimen/margin_top"
+            android:gravity="left"
+            />
 <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:background="@color/my_white"
-        android:layout_below="@+id/tab_menu"
+        android:layout_below="@+id/tv_my_store"
         android:id="@+id/content_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -20,5 +73,15 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true" />
-
-    </LinearLayout>
+	<FrameLayout
+	    android:layout_centerInParent="true"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    >
+	<com.sougongcheng.ui.widget.ProgressWheel
+      android:id="@+id/progress_wheel"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+    />
+	</FrameLayout>
+    </RelativeLayout>

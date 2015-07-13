@@ -11,6 +11,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,10 @@ import com.sougongcheng.bean.UserInfo;
 import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.main.CommentActivity;
 import com.sougongcheng.server.Server;
+import com.sougongcheng.ui.widget.HeartProgressBar;
+import com.sougongcheng.ui.widget.SpotsDialog;
 import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
 
 public class FragmentMyCircle extends Fragment implements OnItemClickListener{
@@ -62,18 +66,24 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
     
     private CommentsInfo commentsInfo;
     
+    HeartProgressBar heartProgressBar;
+    
     private AdapterMyCircle adapterMyCircle;
+    
+	private SpotsDialog spotsDialog;
     
 	private Handler mHandler=new Handler()
 	{
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==1)
 			{
+				spotsDialog.dismiss();	
 				if(commentsInfo.status==0)
 				{
 				mMapList=commentsInfo.comments;
 				adapterMyCircle=new AdapterMyCircle(getActivity(), mMapList);
 				actualListView.setAdapter(adapterMyCircle);
+				actualListView.setVisibility(View.VISIBLE);
 				}else
 				{
 					
@@ -97,9 +107,9 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 		
 		initViews();
 		
-		initDatas();
-		
 		initClickListenner();
+		
+		initDatas();
 		
 		return myView;
 	}
@@ -136,12 +146,23 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 	}
 
 	private void initDatas() {
-		mServer=Server.getInstance();
-		mPoolManager=ThreadPoolManager.getInstance();
-		mPoolManager.addTask(new Runnable() {
+		if(NetworkUtils.isNetworkAvailable(getActivity()))
+		{
+			actualListView.setVisibility(View.INVISIBLE);
+			spotsDialog=new SpotsDialog(getActivity(), "加载中...");
+			spotsDialog.show();
+			mServer=Server.getInstance();
+			mPoolManager=ThreadPoolManager.getInstance();
+			mPoolManager.addTask(new Runnable() {
 			@Override
 			public void run() {
 				commentsInfo=mServer.getCommments("all", access_token, "10", "0","0");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				if(commentsInfo!=null)
 				{
 				Message message=mHandler.obtainMessage();
@@ -150,6 +171,10 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 				}
 			}
 		});
+		}else
+		{
+			Toast.makeText(getActivity(), "当前网络不可用", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void initViews() {
@@ -179,7 +204,7 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 		protected String[] doInBackground(Void... params) {
 			// Simulates a background job.
 			try {
-				Thread.sleep(4000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 			}
 			return mStrings;
@@ -212,6 +237,16 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 			long id) {
 		
 		Intent intent=new Intent(getActivity(),CommentActivity.class);
+		intent.putExtra(MConstants.COMMENTS_ID, mMapList.get(position-1).get(MConstants.COMMENTS_ID).toString());
+		intent.putExtra(MConstants.COMMENTS_USER_ID, mMapList.get(position-1).get(MConstants.COMMENTS_USER_ID).toString());
+		intent.putExtra(MConstants.COMMENTS_USER_NAME, mMapList.get(position-1).get(MConstants.COMMENTS_USER_NAME).toString());
+		intent.putExtra(MConstants.COMMENTS_LIKE_NUMS, mMapList.get(position-1).get(MConstants.COMMENTS_LIKE_NUMS).toString());
+		intent.putExtra(MConstants.COMMENTS_SHARE_NUMS, mMapList.get(position-1).get(MConstants.COMMENTS_SHARE_NUMS).toString());
+		intent.putExtra(MConstants.COMMENTS_CONTENTS, mMapList.get(position-1).get(MConstants.COMMENTS_CONTENTS).toString());
+		intent.putExtra(MConstants.COMMENTS_CREATE_TIME, mMapList.get(position-1).get(MConstants.COMMENTS_CREATE_TIME).toString());
+		intent.putExtra(MConstants.COMMENTS_IS_LIKE, mMapList.get(position-1).get(MConstants.COMMENTS_IS_LIKE).toString());
+		intent.putExtra(MConstants.COMMENTS_USER_SEX, mMapList.get(position-1).get(MConstants.COMMENTS_USER_SEX).toString());
+		intent.putExtra(MConstants.COMMENTS_IS_STORE, mMapList.get(position-1).get(MConstants.COMMENTS_IS_STORE).toString());
 		startActivity(intent);
 	}
 

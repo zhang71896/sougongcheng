@@ -22,6 +22,7 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +35,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sougongcheng.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -50,6 +52,7 @@ import com.sougongcheng.main.MessageDetail;
 import com.sougongcheng.server.Server;
 import com.sougongcheng.ui.widget.HeartProgressBar;
 import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
 
 public class FragmentSearchProject extends Fragment implements OnClickListener, OnItemClickListener{
@@ -165,7 +168,10 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==1)
 			{
+				if(heartProgressBar.isShown())
+				{
 				heartProgressBar.dismiss();
+				}
 				changeDataSource();
 			}
 			
@@ -433,6 +439,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	}
 	
 	private void getDataSource(final int i) {
+		if(NetworkUtils.isNetworkAvailable(getActivity()))
+		{
 		if(mServer==null)
 		{
 		mServer=Server.getInstance();
@@ -444,6 +452,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		if(heartProgressBar.isStopped())
 		{
 		heartProgressBar.start();
+		Log.e("tag", "heartProgressBar"+heartProgressBar.isShown()+"");
 		}
 		actualListView.setVisibility(View.INVISIBLE);
 		mPoolManager.addTask(new Runnable() {
@@ -483,6 +492,10 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 					}
 			}
 			});
+		}else
+		{
+			Toast.makeText(getActivity(), "当前网络不可用", Toast.LENGTH_SHORT).show();
+		}
 		
 	}
 
@@ -509,7 +522,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		protected String[] doInBackground(Void... params) {
 			// Simulates a background job.
 			try {
-				Thread.sleep(4000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 			}
 			return mStrings;

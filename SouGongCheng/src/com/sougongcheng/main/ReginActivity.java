@@ -21,6 +21,7 @@ import com.example.sougongcheng.R;
 import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.ui.widget.MyProgressDialog;
 import com.sougongcheng.util.CommenTools;
+import com.sougongcheng.util.NetworkUtils;
 
 public class ReginActivity extends Activity implements OnClickListener{
 	
@@ -113,11 +114,10 @@ public class ReginActivity extends Activity implements OnClickListener{
 		
 		switch (v.getId()) {
 		case R.id.btn_next_step:
+			if(NetworkUtils.isNetworkAvailable(ReginActivity.this))
+			{
 			if(CommenTools.inputCheck(et_centify_code.getText().toString()))
 			{
-			myProgressDialog=new MyProgressDialog(ReginActivity.this).createDialog(ReginActivity.this);
-		    myProgressDialog.setMessage("正在验证中..");
-			myProgressDialog.show();
 			Intent intent=new Intent(ReginActivity.this,ReginActivity2.class);
 			intent.putExtra("phoneNum", et_account.getText().toString());
 			startActivity(intent);
@@ -126,6 +126,10 @@ public class ReginActivity extends Activity implements OnClickListener{
 			{
 				Toast.makeText(ReginActivity.this, "请输入验证码", Toast.LENGTH_SHORT).show();	
 				et_centify_code.requestFocus();
+			}
+			}else
+			{
+				Toast.makeText(ReginActivity.this, "当前网络不可用", Toast.LENGTH_SHORT).show();	
 			}
 			break;
 

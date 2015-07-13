@@ -21,6 +21,7 @@ import android.util.Log;
 import com.sougongcheng.bean.AccessStatus;
 import com.sougongcheng.bean.CommentsInfo;
 import com.sougongcheng.bean.RecommandInfo;
+import com.sougongcheng.bean.SearchMachine;
 import com.sougongcheng.bean.Status;
 import com.sougongcheng.bean.UserInfo;
 import com.sougongcheng.contants.MConstants;
@@ -38,6 +39,8 @@ public class Server {
 	private AccessStatus accessStatus;
 	
 	private CommentsInfo commentsInfo;
+	
+	private SearchMachine searchMachine;
 	
 	private Server()
 	{
@@ -546,6 +549,37 @@ public class Server {
 		 return status;
 	 }
 
+	 public SearchMachine getSearchMachine(String access_token,String id)
+	 {
+		 String reqStr=MConstants.URL+"get_keywords/?access_token="+access_token+"&id="+id;
+		 String str = "";
+		 str=getData(reqStr);
+		 searchMachine=new SearchMachine();
+		 try {
+			 JSONObject jsonObj = null;
+		     int result=Integer.parseInt(jsonObj.getString("status"));
+			 jsonObj = new JSONObject(str);
+			 if(result==0)
+			 {
+				  searchMachine.status=0;
+				  JSONArray jsonKeyWords=jsonObj.getJSONArray("keywords");
+				  searchMachine.keywords=new ArrayList<Map<String,Object>>();
+				  for(int i=0;i<jsonKeyWords.length();i++)
+				  {
+					  
+				  }
+				  
+			 }else 
+			 {
+				 searchMachine.status=result;
+			 }
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 return searchMachine;
+	 }
+	 
 	 protected String retrieveInputStream(HttpEntity httpEntity) {
      int length = (int) httpEntity.getContentLength();
      if (length < 0)

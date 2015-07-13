@@ -138,19 +138,22 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/bottom_menu"
             android:layout_alignParentBottom="true"
             android:background="@color/tab_gray"
             >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"  
+  			    android:focusableInTouchMode="true"
                 android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
            <com.sougongcheng.ui.widget.ClearableAutoCompleteTextView
 		    android:layout_weight="1"
 	    	android:layout_centerHorizontal="true"
 	    	style="@style/GlobleSingleLineEditText"
-        	android:id="@+id/et_centify_code"
+        	android:id="@+id/et_comment_content"
         	android:background="@drawable/bg_edittext"
         	android:textSize="@dimen/login_word_size"
         	android:maxLength="300"

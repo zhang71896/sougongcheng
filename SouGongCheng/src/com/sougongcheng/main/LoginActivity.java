@@ -7,6 +7,7 @@ import com.sougongcheng.server.Server;
 import com.sougongcheng.ui.widget.SpotsDialog;
 import com.sougongcheng.util.CommenTools;
 import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.NetworkUtils;
 import com.sougongcheng.util.ThreadPoolManager;
 
 import android.app.Activity;
@@ -109,6 +110,9 @@ public class LoginActivity extends Activity implements OnClickListener{
 		case R.id.submit:
 			if(inputCheck())
 			{
+				if(NetworkUtils.isNetworkAvailable(LoginActivity.this))
+				{
+			
 			mServer=Server.getInstance();
 			
 			mPoolManager=ThreadPoolManager.getInstance();
@@ -136,6 +140,10 @@ public class LoginActivity extends Activity implements OnClickListener{
 					
 					}
 				});
+				}else
+				{
+					Toast.makeText(LoginActivity.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
+				}
 			}
 			break;
 
