@@ -48,6 +48,7 @@ import com.sougongcheng.bean.RecommandInfo;
 import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.main.MessageDetail;
 import com.sougongcheng.server.Server;
+import com.sougongcheng.ui.widget.HeartProgressBar;
 import com.sougongcheng.util.GetShareDatas;
 import com.sougongcheng.util.ThreadPoolManager;
 
@@ -150,6 +151,9 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	DisplayImageOptions options;
 
 	private ImageLoader imageLoader;
+	
+    HeartProgressBar heartProgressBar;
+    
 	// 切换当前显示的图片
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -161,6 +165,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==1)
 			{
+				heartProgressBar.dismiss();
 				changeDataSource();
 			}
 			
@@ -209,9 +214,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 		actualListView.setFocusable(true);
 
-		imageResId = new int[] { R.drawable.home1, R.drawable.home2, R.drawable.home3};
-		
-		titles = new String[imageResId.length];
+		titles = new String[3];
 		
 		titles[0] = "测试1";
 		
@@ -222,7 +225,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		imageViews = new ArrayList<ImageView>();
 
 		// 初始化图片资源
-		for (int i = 0; i < imageResId.length; i++) {
+		for (int i = 0; i < 3; i++) {
 			ImageView imageView = new ImageView(getActivity());
 			imageLoader.displayImage("http://120.25.224.229:8080/pics/cm2_daily_banner22x.jpg", imageView, options);
 			imageView.setScaleType(ScaleType.CENTER_CROP);
@@ -254,6 +257,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		adapterSearchProject=new AdapterSearchProject(getActivity(), mMapList, 0);
 		
 		actualListView.setAdapter(adapterSearchProject);
+		
+		actualListView.setVisibility(View.VISIBLE);
 		
 
 	}
@@ -354,6 +359,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 		top_tab=myView.findViewById(R.id.tab_menu);
 		
+		heartProgressBar=(HeartProgressBar) myView.findViewById(R.id.progressBar);
+		
 	}
 	
 	
@@ -434,6 +441,11 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		{
 		mPoolManager=ThreadPoolManager.getInstance();
 		}
+		if(heartProgressBar.isStopped())
+		{
+		heartProgressBar.start();
+		}
+		actualListView.setVisibility(View.INVISIBLE);
 		mPoolManager.addTask(new Runnable() {
 			public void run() {
 					if(i==0)
@@ -459,6 +471,12 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 					}
 					if(recommandInfo!=null)
 					{
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						Message message=mHandler.obtainMessage();
 						message.what=1;
 						message.sendToTarget();
@@ -524,7 +542,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 
 		@Override
 		public int getCount() {
-			return imageResId.length;
+			return 3;
 		}
 
 		@Override

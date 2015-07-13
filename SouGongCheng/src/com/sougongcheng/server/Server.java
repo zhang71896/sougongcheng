@@ -18,8 +18,6 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sougongcheng.bean.AccessStatus;
 import com.sougongcheng.bean.CommentsInfo;
 import com.sougongcheng.bean.RecommandInfo;
@@ -467,8 +465,7 @@ public class Server {
 	 public Status likeComment(String type,String access_token,String id)
 	 {
 		 String reqStr=MConstants.URL+"comment_like_num/"+type+"?access_token="+access_token+"&id="+id;
-		 String str = "";
-		 status=getStatus(str);
+		 status=getStatus(reqStr);
 		 return status;
 	 }
 	 

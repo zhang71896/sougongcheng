@@ -4,6 +4,7 @@ import com.example.sougongcheng.R;
 import com.sougongcheng.bean.UserInfo;
 import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.server.Server;
+import com.sougongcheng.ui.widget.SpotsDialog;
 import com.sougongcheng.util.CommenTools;
 import com.sougongcheng.util.GetShareDatas;
 import com.sougongcheng.util.ThreadPoolManager;
@@ -40,6 +41,8 @@ public class LoginActivity extends Activity implements OnClickListener{
 	
 	private GetShareDatas mGetShareDatas;
 	
+	private SpotsDialog spotsDialog;
+	
 	private Handler mHandler=new Handler()
 	{
 		public void handleMessage(android.os.Message msg) {
@@ -48,6 +51,10 @@ public class LoginActivity extends Activity implements OnClickListener{
 			{
 				if(userInfo.status==0)
 				{
+					if(spotsDialog.isShowing())
+					{
+						spotsDialog.dismiss();
+					}
 				Toast.makeText(LoginActivity.this, CommenTools.getResult(userInfo.status), Toast.LENGTH_SHORT).show();
 				mGetShareDatas.insertStringMessage(MConstants.ACCESS_TOKEN, userInfo.access_token);
 				mGetShareDatas.insertStringMessage(MConstants.TELNUM, userInfo.telnum);
@@ -106,13 +113,27 @@ public class LoginActivity extends Activity implements OnClickListener{
 			
 			mPoolManager=ThreadPoolManager.getInstance();
 			
+			spotsDialog=new SpotsDialog(this, "µÇÂ¼ÖÐ...");
+			
+			spotsDialog.show();
+			
 			mPoolManager.addTask(new Runnable() {
 				@Override
 				public void run() {
 					userInfo=mServer.login(et_account.getText().toString(), et_password.getText().toString());
-					Message message=mHandler.obtainMessage();
-					message.what=1;
-					message.sendToTarget();
+					try {
+						Thread.sleep(2000);
+						if(userInfo!=null)
+						{
+							Message message=mHandler.obtainMessage();
+							message.what=1;
+							message.sendToTarget();
+						}
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 					}
 				});
 			}

@@ -3,6 +3,7 @@ package com.sougongcheng.fragment;
 import java.util.ArrayList;
 import java.util.Map;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import com.sougongcheng.bean.CommentsInfo;
 import com.sougongcheng.bean.RecommandInfo;
 import com.sougongcheng.bean.UserInfo;
 import com.sougongcheng.contants.MConstants;
+import com.sougongcheng.main.CommentActivity;
 import com.sougongcheng.server.Server;
 import com.sougongcheng.util.GetShareDatas;
 import com.sougongcheng.util.ThreadPoolManager;
@@ -208,9 +210,9 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		// TODO Auto-generated method stub
-		Toast.makeText(getActivity(), "当前"+position+"被点击", Toast.LENGTH_SHORT).show();
 		
+		Intent intent=new Intent(getActivity(),CommentActivity.class);
+		startActivity(intent);
 	}
 
 

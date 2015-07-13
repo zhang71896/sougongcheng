@@ -57,4 +57,6 @@
     <string name="text_next_step">下一步</string>
     
 	<string name="text_send">发布</string>
+	
+	<string name="text_comment">说点什么</string>
 </resources>

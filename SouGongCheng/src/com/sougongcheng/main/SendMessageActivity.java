@@ -1,5 +1,8 @@
 package com.sougongcheng.main;
 
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 import com.example.sougongcheng.R;
 import com.sougongcheng.bean.Status;
 import com.sougongcheng.contants.MConstants;
@@ -116,7 +119,6 @@ implements OnClickListener{
 			}
 			
 		}
-
 
 		private void send() {
 			mServer=Server.getInstance();
