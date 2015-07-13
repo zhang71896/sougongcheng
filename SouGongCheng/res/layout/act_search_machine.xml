@@ -43,6 +43,8 @@
            android:layout_marginTop="@dimen/margin_top"
            android:layout_below="@+id/top_menu"
            android:layout_centerHorizontal="true"
+           android:focusable="true"
+           android:focusableInTouchMode="true"
            android:id="@+id/add_key_words"
            >
        <com.sougongcheng.ui.widget.ClearableAutoCompleteTextView
@@ -51,7 +53,7 @@
         android:id="@+id/et_add_key_words"
         android:background="@drawable/bg_edittext"
         android:drawableLeft="@drawable/write"
-        android:drawableStart="@drawable/ic_person"
+        android:drawableStart="@drawable/write"
         android:textSize="@dimen/login_word_size"
         android:layout_width="240dp"
         android:hint="添加自定义关键字"

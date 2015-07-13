@@ -27,6 +27,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -34,6 +35,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.sougongcheng.adapter.AdapterMyProject;
+import com.sougongcheng.adapter.AdapterSearchMachine;
+import com.sougongcheng.adapter.AdapterSearchProject;
 import com.sougongcheng.bean.RecommandInfo;
 import com.sougongcheng.bean.SearchMachine;
 import com.sougongcheng.bean.Status;
@@ -88,6 +91,10 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener, 
 	
 	private Status status;
 	
+	private AdapterSearchMachine adapterSearchMachine;
+	
+	private ProgressBar my_pb;
+	
 	private BroadcastReceiver mBroadcastReceiver=new BroadcastReceiver() {
 		
 		@Override
@@ -109,6 +116,7 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener, 
 			{
 				if(recommandInfo.status==0)
 				{
+			    my_pb.setVisibility(View.INVISIBLE);
 				changeDataSource();
 				}
  			}else if(msg.what==2)
@@ -200,6 +208,8 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener, 
 	}
 
 	private void initViews() {
+		
+		my_pb=(ProgressBar) myView.findViewById(R.id.my_pb);
 		
 		mGetShareDatas=GetShareDatas.getInstance(MConstants.USER_INFO, getActivity());
 		
@@ -299,13 +309,15 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener, 
 			values=CommenTools.enToCh(values);
 			mStrings[i]=values;
 		}
-		adapter = new ArrayAdapter<String>(  
+		adapterSearchMachine=new AdapterSearchMachine(getActivity(), result, mStrings);
+		/*adapter = new ArrayAdapter<String>(  
                 getActivity(),  
                 R.layout.item_search,//只能有一个定义了id的TextView  
                 mStrings);//data既可以是数组，也可
 		
-		follower_list.setAdapter(adapter);
-		
+		follower_list.setAdapter(adapter);*/
+		follower_list.setFocusable(true);
+		follower_list.setAdapter(adapterSearchMachine);
 		follower_list.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,

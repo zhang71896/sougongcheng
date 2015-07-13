@@ -1,6 +1,9 @@
 
 package com.sougongcheng.ui.widget;
 
+
+import com.test.finder.R;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -16,8 +19,6 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
 import android.widget.CheckBox;
-
-import com.test.finder.R;
 
 public class SwitchButton extends CheckBox {
     private Paint mPaint;
@@ -40,17 +41,17 @@ public class SwitchButton extends CheckBox {
 
     private PorterDuffXfermode mXfermode;
 
-    private float mFirstDownY; // 棣栨鎸変笅鐨刌
+    private float mFirstDownY; // 首次按下的Y
 
-    private float mFirstDownX; // 棣栨鎸変笅鐨刋
+    private float mFirstDownX; // 首次按下的X
 
-    private float mRealPos; // 鍥剧墖鐨勭粯鍒朵綅缃?
+    private float mRealPos; // 图片的绘制位置
 
-    private float mBtnPos; // 鎸夐挳鐨勪綅缃?
+    private float mBtnPos; // 按钮的位置
 
-    private float mBtnOnPos; // 寮?鍏虫墦寮?鐨勪綅缃?
+    private float mBtnOnPos; // 开关打开的位置
 
-    private float mBtnOffPos; // 寮?鍏冲叧闂殑浣嶇疆
+    private float mBtnOffPos; // 开关关闭的位置
 
     private float mMaskWidth;
 
@@ -88,7 +89,7 @@ public class SwitchButton extends CheckBox {
 
     private final float EXTENDED_OFFSET_Y = 15;
 
-    private float mExtendOffsetY; // Y杞存柟鍚戞墿澶х殑鍖哄煙,澧炲ぇ鐐瑰嚮鍖哄煙
+    private float mExtendOffsetY; // Y轴方向扩大的区域,增大点击区域
 
     private float mAnimationPosition;
 
@@ -159,7 +160,7 @@ public class SwitchButton extends CheckBox {
     }
 
     /**
-     * 鍐呴儴璋冪敤姝ゆ柟娉曡缃甤hecked鐘舵?侊紝姝ゆ柟娉曚細寤惰繜鎵ц鍚勭鍥炶皟鍑芥暟锛屼繚璇佸姩鐢荤殑娴佺晠搴?
+     * 内部调用此方法设置checked状态，此方法会延迟执行各种回调函数，保证动画的流畅度
      * 
      * @param checked
      */
@@ -224,7 +225,7 @@ public class SwitchButton extends CheckBox {
      * @param listener the callback to call on checked state change
      * @hide
      */
-    void setOnCheckedChangeWidgetListener(OnCheckedChangeListener listener) {
+    public void setOnCheckedChangeWidgetListener(OnCheckedChangeListener listener) {
         mOnCheckedChangeWidgetListener = listener;
     }
 
@@ -300,7 +301,7 @@ public class SwitchButton extends CheckBox {
     }
 
     /**
-     * 灏哹tnPos杞崲鎴怰ealPos
+     * 将btnPos转换成RealPos
      * 
      * @param btnPos
      * @return
@@ -311,22 +312,22 @@ public class SwitchButton extends CheckBox {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.saveLayerAlpha(mSaveLayerRectF, mAlpha, Canvas.MATRIX_SAVE_FLAG
-                | Canvas.CLIP_SAVE_FLAG | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
-                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG | Canvas.CLIP_TO_LAYER_SAVE_FLAG);
-        // 缁樺埗钂欐澘
-        canvas.drawBitmap(mMask, 0, mExtendOffsetY, mPaint);
-        mPaint.setXfermode(mXfermode);
+    	   canvas.saveLayerAlpha(mSaveLayerRectF, mAlpha, Canvas.MATRIX_SAVE_FLAG
+                   | Canvas.CLIP_SAVE_FLAG | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
+                   | Canvas.FULL_COLOR_LAYER_SAVE_FLAG | Canvas.CLIP_TO_LAYER_SAVE_FLAG);
+           // 绘制蒙板
+           canvas.drawBitmap(mMask, 0, mExtendOffsetY, mPaint);
+           mPaint.setXfermode(mXfermode);
 
-        // 缁樺埗搴曢儴鍥剧墖
-        canvas.drawBitmap(mBottom, mRealPos, mExtendOffsetY, mPaint);
-        mPaint.setXfermode(null);
-        // 缁樺埗杈规
-        canvas.drawBitmap(mFrame, 0, mExtendOffsetY, mPaint);
+           // 绘制底部图片
+           canvas.drawBitmap(mBottom, mRealPos, mExtendOffsetY, mPaint);
+           mPaint.setXfermode(null);
+           // 绘制边框
+           canvas.drawBitmap(mFrame, 0, mExtendOffsetY, mPaint);
 
-        // 缁樺埗鎸夐挳
-        canvas.drawBitmap(mCurBtnPic, mRealPos, mExtendOffsetY, mPaint);
-        canvas.restore();
+           // 绘制按钮
+           canvas.drawBitmap(mBtnNormal, mRealPos, mExtendOffsetY, mPaint);
+           canvas.restore();
     }
 
     @Override

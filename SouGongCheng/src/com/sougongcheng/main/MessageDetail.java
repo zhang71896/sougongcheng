@@ -77,9 +77,7 @@ public class MessageDetail extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_back:
-			
 			finish();
-			
 			break;
 
 		default:

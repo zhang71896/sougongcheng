@@ -8,7 +8,6 @@
     tools:ignore="MergeRootFrame" >
     	<RelativeLayout
     	    android:id="@+id/follower_setting"
-    	    android:layout_marginTop="@dimen/margin_top"
     	    android:layout_width="match_parent"
             android:layout_alignParentTop="true"
             android:layout_height="40dp"
@@ -41,15 +40,8 @@
     	        android:layout_height="100dp"
     	        android:background="@color/my_white"
     	        />
-    	    <TextView
-    	        android:id="@+id/blank_space"
-    	       android:layout_below="@+id/follower_list"
-    	       android:layout_width="match_parent"
-    	       android:layout_height="20dp" 
-    	       android:background="@color/my_white"
-    	        />
           <TextView
-            android:layout_below="@+id/blank_space"
+            android:layout_below="@+id/follower_list"
             android:id="@+id/tv_my_store"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,10 +65,12 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true" />
-	<FrameLayout
-	    android:layout_centerInParent="true"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    >
-	</FrameLayout>
+	 <ProgressBar
+	    android:id="@+id/my_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dip"
+        android:indeterminateDrawable="@drawable/animdraw2"
+        android:indeterminateDuration="1500" />
     </RelativeLayout>

@@ -10,6 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
+
 import com.sougongcheng.bean.UserInfo;
 import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.server.Server;
@@ -60,6 +62,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 				mGetShareDatas.insertIntMessage(MConstants.STATUS, userInfo.status);
 				Intent intent=new Intent(LoginActivity.this, MainAct.class);
 				startActivity(intent);
+				finish();
 				}else
 				{
 				Toast.makeText(LoginActivity.this, CommenTools.getResult(userInfo.status), Toast.LENGTH_SHORT).show();
@@ -88,6 +91,12 @@ public class LoginActivity extends Activity implements OnClickListener{
 	}
 
 	private void initViews() {
+		
+		 JPushInterface.setDebugMode(true);
+		 // 设置开启日志,发布时请关闭日志
+         JPushInterface.init(this); 
+		
+         JPushInterface.resumePush(getApplicationContext());
 		
 		mGetShareDatas=GetShareDatas.getInstance(MConstants.USER_INFO, LoginActivity.this);
 		
@@ -123,7 +132,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 				public void run() {
 					userInfo=mServer.login(et_account.getText().toString(), et_password.getText().toString());
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 						if(userInfo!=null)
 						{
 							Message message=mHandler.obtainMessage();

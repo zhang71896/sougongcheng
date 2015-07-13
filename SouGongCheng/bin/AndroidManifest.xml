@@ -31,18 +31,18 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-<uses-permission android:name="android.permission.READ_CONTACTS" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.RECEIVE_SMS" />
-<uses-permission android:name="android.permission.GET_TASKS" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-<uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.GET_TASKS" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
  <!-- 蓝牙分享所需的权限 -->
   <uses-permission android:name="android.permission.BLUETOOTH" />
   <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -51,30 +51,16 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-         <!-- Required -->
-        <service
-            android:name="cn.jpush.android.service.PushService"
-            android:enabled="true"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTER" />
-                <action android:name="cn.jpush.android.intent.REPORT" />
-                <action android:name="cn.jpush.android.intent.PushService" />
-                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
-            </intent-filter>
-        </service>
-         
-        <!-- Required -->
         <!-- 主程序  -->
         <activity android:name="com.sougongcheng.main.MainAct">
             
             </activity>
         <!-- 登录 -->
           <activity android:name="com.sougongcheng.main.LoginActivity">
-                      <intent-filter>
+              <!--     <intent-filter>
                 	<action android:name="android.intent.action.MAIN"/>
                 	<category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            </intent-filter> -->
               </activity>
         <!-- 注册  -->
          <activity android:name="com.sougongcheng.main.ReginActivity"/>
@@ -82,6 +68,8 @@
          <activity android:name="com.sougongcheng.main.ReginActivity2"/>
         <!-- 详细信息  -->
          <activity android:name="com.sougongcheng.main.MessageDetail"/>
+       <!-- 推送详细信息  -->
+         <activity android:name="com.sougongcheng.main.MessageDetailPush"/>
         <!-- 发布消息  -->
          <activity android:name="com.sougongcheng.main.SendMessageActivity">
              </activity>
@@ -93,6 +81,13 @@
          <activity android:name="com.sougongcheng.main.SearchConetentActivity"/>
          <!-- 搜索器添加界面 -->
          <activity android:name="com.sougongcheng.main.SearchMachineActivity"/>
+         <!-- 加载界面 -->
+         <activity android:name="com.sougongcheng.main.LoadingAnimationActivity">
+         		<intent-filter>
+                	<action android:name="android.intent.action.MAIN"/>
+                	<category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+         </activity>
 		 <activity
             android:name="com.mob.tools.MobUIShell"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
@@ -128,39 +123,86 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-<!--微信分享回调 -->
- <activity
- android:name=".wxapi.WXEntryActivity"
- android:theme="@android:style/Theme.Translucent.NoTitleBar"
- android:configChanges="keyboardHidden|orientation|screenSize"
- android:exported="true"
- android:screenOrientation="portrait" /> 
+		<!--微信分享回调 -->
+ 		<activity
+ 			android:name=".wxapi.WXEntryActivity"
+		    android:theme="@android:style/Theme.Translucent.NoTitleBar"
+ 			android:configChanges="keyboardHidden|orientation|screenSize"
+ 		    android:exported="true"
+ 			android:screenOrientation="portrait" /> 
  
-<!--易信分享回调 -->
- <activity
- android:name=".yxapi.YXEntryActivity"
- android:theme="@android:style/Theme.Translucent.NoTitleBar"
- android:configChanges="keyboardHidden|orientation|screenSize"
- android:exported="true"
- android:screenOrientation="portrait" />
+		<!--易信分享回调 -->
+ 		<activity
+ 			android:name=".yxapi.YXEntryActivity"
+ 			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+ 			android:configChanges="keyboardHidden|orientation|screenSize"
+ 			android:exported="true"
+ 			android:screenOrientation="portrait" />
  
- <!-- Required SDK核心功能-->
+      	<!-- Required SDK核心功能-->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden" 
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="com.test.finder" />
             </intent-filter>
         </activity>
-        <!-- Required SDK核心功能-->
+        <!-- Required  SDK核心功能-->
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
             android:exported="false" >
         </service>
+    
+        
+        <!-- Required SDK 核心功能-->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+            </intent-filter>
+        </service>
+        
+        <!-- Required SDK 核心功能-->
+        <service 
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter >
+                <action android:name="cn.jpush.android.intent.DaemonService" />
+                <category android:name="com.test.finder"/>
+            </intent-filter>
+        </service>
+        <!-- Required SDK核心功能-->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true"
+            android:exported="false">
+             <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   <!--Required  显示通知栏 -->
+                <category android:name="com.test.finder" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+             <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <!-- Required SDK核心功能-->
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
          <receiver android:name="com.sougongcheng.broadcastreciver.MyPushReciver" >
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!--Required  用户注册SDK的intent-->
@@ -170,11 +212,11 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
                 <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!--Optional 用户接受Rich Push Javascript 回调函数的intent-->
                 <action android:name="cn.jpush.android.intent.CONNECTION" /><!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
                 <category android:name="com.test.finder" />
             </intent-filter>
         </receiver>
-        <!-- Required SDK核心功能-->
-        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
  		 <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
         <meta-data android:name="JPUSH_APPKEY" android:value="a9af2aa64f2827cfd1733c31" /> <!--  </>值来自开发者平台取得的AppKey-->

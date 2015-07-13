@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -155,6 +156,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	private ImageLoader imageLoader;
 	
 	private String offsetPostion="0";
+	
+	private ProgressBar my_pb;
     
 	// 切换当前显示的图片
 	private Handler handler = new Handler() {
@@ -236,7 +239,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 
 	private void changeDataSource(int j) {
 		// TODO Auto-generated method stub
-	
+		my_pb.setVisibility(View.INVISIBLE);
 		if(j==0)
 		{
 		banerArrayList=recommandInfo.banners;	
@@ -338,6 +341,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	private void initViews() {
 		
 		mGetShareDatas=GetShareDatas.getInstance(MConstants.USER_INFO, getActivity());
+		
+		my_pb=(ProgressBar) myView.findViewById(R.id.my_pb);
 		//tab
 		tab_suggest=(RelativeLayout) myView.findViewById(R.id.tab_suggest);
 		
@@ -399,19 +404,24 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 		switch (v.getId()) {
 		case R.id.tab_suggest:
+			my_pb.setVisibility(View.VISIBLE);
 			switchTab(0);
 			break;
 
 		case R.id.tab_agent_compare:
+			my_pb.setVisibility(View.VISIBLE);
 			switchTab(1);
 			break;
 		case R.id.tab_project_compare:
+			my_pb.setVisibility(View.VISIBLE);
 			switchTab(2);
 			break;
 		case R.id.tab_invite_bids:
+			my_pb.setVisibility(View.VISIBLE);
 			switchTab(3);
 			break;
 		case R.id.tab_win_bid:
+			my_pb.setVisibility(View.VISIBLE);
 			switchTab(4);
 			break;
 		}
@@ -537,6 +547,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		actualListView.setVisibility(View.INVISIBLE);
 		mPoolManager.addTask(new Runnable() {
 			public void run() {
+			
 					if(i==0)
 					{
 					recommandInfo=mServer.getRecommandInfo(access_token, "2");
@@ -557,6 +568,12 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						type="win";
 						}
 						recommandInfo=mServer.getBandsInfo(type, access_token, "10", offsetPostion);
+					}
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 					if(recommandInfo!=null)
 					{

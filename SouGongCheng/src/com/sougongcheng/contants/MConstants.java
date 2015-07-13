@@ -104,6 +104,8 @@ public class MConstants {
 	public static String SEARCH_BIND_KEYWORDS="search_bind_keywords";
 	
 	public static String SEARCH_BIND_KEYWORDS_NUM="search_bind_keywords_num";
+	
+	public static String SEARCH_BIND_IS_USED="search_bind_is_used";
 
 
 	//ÈÈÃÅ¹Ø¼ü×Ö

@@ -156,9 +156,10 @@
         	android:id="@+id/et_comment_content"
         	android:background="@drawable/bg_edittext"
         	android:textSize="@dimen/login_word_size"
+        	android:drawableLeft="@drawable/write"
+        	android:drawableStart="@drawable/write"
         	android:maxLength="300"
         	android:hint="@string/text_comment"
-        	android:nextFocusDown="@+id/et_password"
         	android:layout_marginLeft="2dp"
         	 android:layout_marginBottom="2dp"
        		 />

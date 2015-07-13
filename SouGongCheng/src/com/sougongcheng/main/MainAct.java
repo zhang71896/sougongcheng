@@ -2,6 +2,7 @@ package com.sougongcheng.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -18,13 +21,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
+import com.sougongcheng.contants.MConstants;
 import com.sougongcheng.fragment.FragmentMyAccount;
 import com.sougongcheng.fragment.FragmentMyCircle;
 import com.sougongcheng.fragment.FragmentMyProject;
 import com.sougongcheng.fragment.FragmentSearchProject;
+import com.sougongcheng.util.CommenTools;
+import com.sougongcheng.util.GetShareDatas;
 import com.test.finder.R;
 
 
@@ -58,6 +66,15 @@ import com.test.finder.R;
 	
 	private TextView tv_send;
 	
+	private GetShareDatas mGetShareDatas;
+	
+	private String access_token;
+
+	private String access_token_alias;
+	
+	private long firstTime;
+	
+	private long secondTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -188,11 +205,34 @@ import com.test.finder.R;
 		
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
-//		 JPushInterface.setDebugMode(true);
-//		 // 设置开启日志,发布时请关闭日志
-//         JPushInterface.init(this); 
-//		
-//		JPushInterface.resumePush(getApplicationContext());
+		mGetShareDatas=GetShareDatas.getInstance(MConstants.USER_INFO, MainAct.this);
+		
+		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, " ");
+		
+		if(CommenTools.inputCheck(access_token))
+		{
+		access_token_alias=(String) access_token.subSequence(0, access_token.indexOf("-"));
+		}
+		
+		 JPushInterface.setDebugMode(true);
+		 // 设置开启日志,发布时请关闭日志
+         JPushInterface.init(this); 
+		
+         JPushInterface.resumePush(getApplicationContext());
+         
+         
+         JPushInterface.setAlias(MainAct.this, access_token_alias, new TagAliasCallback() {
+			@Override
+			public void gotResult(int arg0, String arg1, Set<String> arg2) {
+				
+				Log.e("tag","result: "+arg0);
+				
+				if(arg0==1)
+				{
+					Toast.makeText(MainAct.this, "推送设置成功", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 		
 		setContentView(R.layout.act_main);
 		
@@ -261,5 +301,22 @@ import com.test.finder.R;
 		}
 		
 	}
+	
+	@Override 
+    public boolean onKeyUp(int keyCode, KeyEvent event) { 
+        if (keyCode == KeyEvent.KEYCODE_BACK) { 
+            long secondTime = System.currentTimeMillis(); 
+            if (secondTime - firstTime > 800) {//如果两次按键时间间隔大于800毫秒，则不退出 
+                Toast.makeText(MainAct.this, "再按一次退出程序...", 
+                        Toast.LENGTH_SHORT).show(); 
+                firstTime = secondTime;//更新firstTime 
+                return true; 
+            } else { 
+            	android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(1);//否则退出程序 
+            } 
+        } 
+        return super.onKeyUp(keyCode, event); 
+    } 
 
 }

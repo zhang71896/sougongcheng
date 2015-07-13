@@ -638,6 +638,10 @@ public class Server {
 							  {
 								  info.put(MConstants.SEARCH_BIND_KEYWORDS+z, jsonKeyWordsContentArray.get(z));
 							  }
+						  }else if(j==6)
+						  {
+							  info.put(MConstants.SEARCH_BIND_IS_USED, jsonKeyWordsContent.get(j));
+							  Log.e("tag", "MConstants.SEARCH_BIND_IS_USED"+jsonKeyWordsContent.get(j));
 						  }
 					  }
 					  searchMachine.keywords.add(info);
@@ -652,6 +656,22 @@ public class Server {
 			e.printStackTrace();
 		}
 		 return searchMachine;
+	 }
+	 
+	 /** *
+	  *  2.15.1 开启或者关闭 自定义搜索器
+	  * @param operation enable ,disable
+	  * @param access_token
+	  * @param id
+	  * @return
+	  */
+	 public Status setSearchMachineIsUsed(String operation,String access_token,String id)
+	 {
+		 String reqStr="";
+		 reqStr=MConstants.URL+"keywords/"+operation+"?access_token="+access_token+"&id="+id;	
+		 Log.e("tag", "setSearchMachineIsUsed:"+reqStr);
+		 status=getStatus(reqStr);
+		 return status;
 	 }
 	 /** *
 	  * 2.16获取热门关键词
