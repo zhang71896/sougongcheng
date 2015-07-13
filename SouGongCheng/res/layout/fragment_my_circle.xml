@@ -4,13 +4,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame" >
-    	<TextView
-    	    android:id="@+id/tv_test"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:layout_centerInParent="true"
-    	    android:textColor="@color/my_gray"
-    	    android:text="测试"
-    	    />
-        
+          <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:background="@color/my_white"
+        android:layout_below="@+id/tab_menu"
+        android:id="@+id/content_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="#00000000"
+        android:divider="#19000000"
+        android:dividerHeight="4dp"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:smoothScrollbar="true" />
     </RelativeLayout>

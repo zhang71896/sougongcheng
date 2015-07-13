@@ -115,13 +115,13 @@ public class ReginActivity extends Activity implements OnClickListener{
 		case R.id.btn_next_step:
 			if(CommenTools.inputCheck(et_centify_code.getText().toString()))
 			{
-			/*myProgressDialog=new MyProgressDialog(ReginActivity.this).createDialog(ReginActivity.this);
+			myProgressDialog=new MyProgressDialog(ReginActivity.this).createDialog(ReginActivity.this);
 		    myProgressDialog.setMessage("正在验证中..");
-			myProgressDialog.show();*/
+			myProgressDialog.show();
 			Intent intent=new Intent(ReginActivity.this,ReginActivity2.class);
 			intent.putExtra("phoneNum", et_account.getText().toString());
 			startActivity(intent);
-			//SMSSDK.submitVerificationCode("86",et_account.getText().toString(),et_centify_code.getText().toString());
+			SMSSDK.submitVerificationCode("86",et_account.getText().toString(),et_centify_code.getText().toString());
 			}else
 			{
 				Toast.makeText(ReginActivity.this, "请输入验证码", Toast.LENGTH_SHORT).show();	
@@ -132,7 +132,7 @@ public class ReginActivity extends Activity implements OnClickListener{
 		case R.id.tv_getcode:
 			if(CommenTools.isMobileNO(et_account.getText().toString()))
 			{
-			//SMSSDK.getVerificationCode("86",et_account.getText().toString(),er);
+			SMSSDK.getVerificationCode("86",et_account.getText().toString(),er);
 			time.start();
 			
 			}else

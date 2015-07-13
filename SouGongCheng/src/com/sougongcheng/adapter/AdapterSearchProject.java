@@ -1,26 +1,33 @@
 package com.sougongcheng.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.text.Layout;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sougongcheng.R;
+import com.sougongcheng.bean.Status;
 import com.sougongcheng.contants.MConstants;
-import com.sougongcheng.dataaccess.DataAccess;
+import com.sougongcheng.server.Server;
 import com.sougongcheng.util.CommenTools;
+import com.sougongcheng.util.GetShareDatas;
+import com.sougongcheng.util.ThreadPoolManager;
 
 public class AdapterSearchProject extends BaseAdapter{
 	
@@ -44,8 +51,40 @@ public class AdapterSearchProject extends BaseAdapter{
 	
 	private Resources mResources;
 	
+	private ThreadPoolManager mPoolManager;
+	
+	private Server mServer;
 
-
+	private Status status;
+	
+	private GetShareDatas mGetShareDatas;
+	
+	private String access_token;
+	
+	
+	public static Map<Integer,Boolean> isSelected;
+	
+	private Handler handler=new Handler(){
+		
+		public void handleMessage(Message msg) {
+			if(msg.what==1)
+			{
+				if(msg.obj.toString().equals("add"))
+				{
+				Toast.makeText(mContext, "收藏成功", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent();
+                intent.setAction("changeLike");        //设置Action
+                mContext.sendBroadcast(intent);             
+				}else
+				{
+				Toast.makeText(mContext, "取消收藏", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent();
+                intent.setAction("changeLike");        //设置Action
+                mContext.sendBroadcast(intent); 
+				}
+			}
+		};
+	};
 	
 	public AdapterSearchProject(Context context,ArrayList<Map<String,Object>> mapList,int type)
 	{
@@ -59,8 +98,35 @@ public class AdapterSearchProject extends BaseAdapter{
 		mInflater=LayoutInflater.from(mContext);
 		
 		mResources=mContext.getResources();
+		
+		mPoolManager=ThreadPoolManager.getInstance();
+		
+		mServer=Server.getInstance();
+		
+		mGetShareDatas=GetShareDatas.getInstance(MConstants.USER_INFO, (Activity) context);
+		
+		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, "");
+		
+		initDatas();
+
 	}
 	
+
+	private void initDatas() {
+		isSelected=new HashMap<Integer,Boolean>();
+		for(int i=0;i<mMapList.size();i++)
+		{
+			if(Integer.parseInt(mMapList.get(i).get(MConstants.RECOMEND_ITEMS_STORE).toString())==1)
+			{
+				isSelected.put(i, true);
+			}else
+			{
+				isSelected.put(i, false);
+			}
+		}
+		
+	}
+
 
 	@Override
 	public int getCount() {
@@ -94,14 +160,13 @@ public class AdapterSearchProject extends BaseAdapter{
             viewHolder.start_time=(TextView) convertView.findViewById(R.id.start_time);
             viewHolder.end_time=(TextView) convertView.findViewById(R.id.end_time);
             viewHolder.label=(TextView) convertView.findViewById(R.id.label);
-            viewHolder.heart=(ImageView) convertView.findViewById(R.id.heart);
+            viewHolder.heart=(CheckBox) convertView.findViewById(R.id.btn_like);
             convertView.setTag(viewHolder);
         }
         else
         {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        myListener=new MyListener(position);  
         viewHolder.news_title.setText(CommenTools.getItemType(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_title).toString()));
         viewHolder.news_author.setText(CommenTools.getItemType(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_AUTHORS).toString()));
         viewHolder.news_type.setText(CommenTools.getItemType(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_TYPE).toString()));
@@ -113,28 +178,49 @@ public class AdapterSearchProject extends BaseAdapter{
         	tags+=mMapList.get(position).get("tag"+i).toString();
         }
         viewHolder.label.setText(tags);
-        
-        if(Integer.parseInt(mMapList.get(position).get(MConstants.RECOMEND_ITEMS_STORE).toString())==1)
-        {
-        	viewHolder.heart.setBackgroundResource(R.drawable.heart_red);
-        }else
-        {
-        	viewHolder.heart.setBackgroundResource(R.drawable.heart_gray);
-        }
-        
+        viewHolder.heart.setChecked(isSelected.get(position));
+        String mtype=mMapList.get(position).get(MConstants.RECOMEND_ITEMS_TYPE).toString();
+        String mid=mMapList.get(position).get(MConstants.RECOMEND_ITEMS_ID).toString();
+        myListener=new MyListener(position,  viewHolder.heart,mtype,mid);
         viewHolder.heart.setOnClickListener(myListener);
         return convertView;
 	}
 	
 	 private class MyListener implements  android.view.View.OnClickListener{  
+		 CheckBox checkBox;
          int mPosition;  
-         public MyListener(int inPosition){  
+         String mstate;
+         String maccess_token;
+         String mtype;
+         String mid;
+         public MyListener(int inPosition,CheckBox checkbox,String type,String id){  
+        	 checkBox=checkbox;
              mPosition= inPosition;  
+             mtype=type;
+             mid=id;
          }  
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			   new DataAccess(mContext).insertNews(mMapList.get(mPosition));
+			isSelected.put(mPosition, checkBox.isChecked());
+			if(checkBox.isChecked())
+			{
+				mstate="add";
+			}else
+			{
+				mstate="del";
+			}
+			mPoolManager.addTask(new Runnable() {
+				@Override
+				public void run() {
+					status=mServer.StoreBandsInfo(mstate,access_token,mtype,mid);
+					Message message=handler.obtainMessage();
+					message.what=1;
+					message.obj=mstate;
+					message.sendToTarget();
+				}
+			
+			});
+			  
 		}  
            
      }  
@@ -151,7 +237,7 @@ public class AdapterSearchProject extends BaseAdapter{
 		
 		public TextView end_time;
 		
-		public ImageView heart;
+		public CheckBox heart;
 		
 		public TextView label;
 		

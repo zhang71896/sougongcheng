@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,9 +45,14 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sougongcheng.adapter.AdapterSearchProject;
 import com.sougongcheng.bean.RecommandInfo;
 import com.sougongcheng.contants.MConstants;
+import com.sougongcheng.main.LoginActivity;
+import com.sougongcheng.main.MessageDetail;
 import com.sougongcheng.server.Server;
 import com.sougongcheng.util.GetShareDatas;
 import com.sougongcheng.util.ThreadPoolManager;
@@ -66,8 +74,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	private LinkedList<String> mListItems;
 	
 	private ArrayAdapter<String> mAdapter;
-
-    
+	
     //声明rl
     
     private RelativeLayout tab_suggest;
@@ -144,6 +151,11 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 
 	private RecommandInfo recommandInfo;
 	
+	private String access_token;
+	
+	DisplayImageOptions options;
+
+	private ImageLoader imageLoader;
 	// 切换当前显示的图片
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -164,8 +176,19 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+
 		super.onCreate(savedInstanceState);
+		imageLoader=ImageLoader.getInstance();
+		imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
+		options = new DisplayImageOptions.Builder()
+		.showImageOnLoading(R.drawable.ic_person)
+		.showImageForEmptyUri(R.drawable.ic_launcher)
+		.showImageOnFail(R.drawable.ic_secure)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
 	}
 	
 	@Override
@@ -186,7 +209,12 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 
 	private void initdatas() {
 		
+		mGetShareDatas=GetShareDatas.getInstance(MConstants.USER_INFO, getActivity());
+
+		
 		actualListView= mPullRefreshListView.getRefreshableView();
+		
+		//getDataSource(0);
 		
 		actualListView.setFocusable(true);
 
@@ -194,18 +222,18 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		
 		titles = new String[imageResId.length];
 		
-		titles[0] = "日出东方，东方不败";
+		titles[0] = "测试1";
 		
-		titles[1] = "日月神教，唯我独尊";
+		titles[1] = "测试2";
 		
-		titles[2] = "天不下雨，天不刮风天上出太阳";
+		titles[2] = "测试3";
 		
 		imageViews = new ArrayList<ImageView>();
 
 		// 初始化图片资源
 		for (int i = 0; i < imageResId.length; i++) {
 			ImageView imageView = new ImageView(getActivity());
-			imageView.setImageResource(imageResId[i]);
+			imageLoader.displayImage("http://120.25.224.229:8080/pics/cm2_daily_banner22x.jpg", imageView, options);
 			imageView.setScaleType(ScaleType.CENTER_CROP);
 			imageViews.add(imageView);
 		}
@@ -220,6 +248,11 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		mPager.setAdapter(new MyAdapter());// 设置填充ViewPager页面的适配器
 		// 设置一个监听器，当ViewPager中的页面改变时调用
 		mPager.setOnPageChangeListener(new MyPageChangeListener());
+		
+		Intent intent=getActivity().getIntent();
+		
+		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, "");
+		
 	}
 	
 	
@@ -347,6 +380,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		top_menu=myView.findViewById(R.id.top_menu);
 		
 		top_tab=myView.findViewById(R.id.tab_menu);
+		
 	}
 	
 	
@@ -375,7 +409,6 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	}
 
 	private void switchTab(int i) {
-		
 		
 		top_tab.setVisibility(View.GONE);
 		
@@ -432,7 +465,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 			public void run() {
 					if(i==0)
 					{
-					recommandInfo=mServer.getRecommandInfo("1-gonglijun", "10");
+					recommandInfo=mServer.getRecommandInfo(access_token, "10");
 					}else
 					{
 						String type="";
@@ -449,7 +482,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						{
 						type="win";
 						}
-						recommandInfo=mServer.getBandsInfo(type, "1-gonglijun", "10", "10");
+						recommandInfo=mServer.getBandsInfo(type, access_token, "10", "10");
 					}
 					if(recommandInfo!=null)
 					{
@@ -617,6 +650,11 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Toast.makeText(getActivity(), "当前"+position+"被点击", Toast.LENGTH_SHORT).show();
+		 String itemId=mMapList.get(position-1).get(MConstants.RECOMEND_ITEMS_ID).toString();
+		 String itemType=mMapList.get(position-1).get(MConstants.RECOMEND_ITEMS_TYPE).toString();
+	 	 String url=mServer.getBandsInfoDetail(access_token, itemType, itemId);
+		 Intent intent=new Intent(getActivity(),MessageDetail.class);
+		 intent.putExtra("url", url);
+		 this.startActivity(intent);
 	}
 }

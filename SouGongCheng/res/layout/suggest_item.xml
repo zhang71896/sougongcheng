@@ -52,17 +52,19 @@
   		    android:layout_width="wrap_content"
   		    android:layout_height="wrap_content"
   		    android:id="@+id/end_time"
-  		    android:text=""
+  		    android:text="2015-07-13"
   		    android:textColor="@color/my_gray"
   		    android:layout_below="@+id/news_author"
   		    android:layout_alignLeft="@+id/news_type"
   		    android:layout_marginTop="@dimen/margin_top"
   		    />
-  		<ImageView
-  		    android:id="@+id/heart"
+  		<CheckBox
+  		    android:id="@+id/btn_like"
+  		    android:focusable="false"
   		    android:layout_width="32dp"
   		    android:layout_height="32dp"
-  		    android:background="@drawable/heart_gray"
+  		    android:background="@drawable/btn_like_check"  
+            android:button="@null"  
   		    android:layout_marginRight="@dimen/margin_lg_right"
   		    android:layout_alignBottom="@+id/start_time"
   		    android:layout_alignParentRight="true"

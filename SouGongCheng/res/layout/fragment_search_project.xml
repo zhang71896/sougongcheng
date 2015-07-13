@@ -28,5 +28,4 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true" />
-        
     </RelativeLayout>

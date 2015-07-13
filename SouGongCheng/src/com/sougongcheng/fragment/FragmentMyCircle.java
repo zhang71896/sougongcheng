@@ -2,6 +2,8 @@ package com.sougongcheng.fragment;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Map;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.sougongcheng.R;
@@ -24,8 +27,6 @@ public class FragmentMyCircle extends Fragment{
 	
 	private View myView;
 	
-	private TextView tv_test;
-	
 	private Server mServer;
 	
 	private String test_str;
@@ -36,15 +37,19 @@ public class FragmentMyCircle extends Fragment{
 	
 	private RecommandInfo recommandInfo;
 	
+	private ArrayList<Map<String,Object>> mMapList;
+	
+    private ListView actualListView;
+
+    private boolean isRefreshing=false;
+    
 	private Handler mHandler=new Handler()
 	{
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==1)
 			{
-				//tv_test.setText(test_str);
-				tv_test.setText(recommandInfo.status+"\n"+recommandInfo.items.size()+"\n");
+				
 			}
-			
 		};
 		
 	};
@@ -65,16 +70,11 @@ public class FragmentMyCircle extends Fragment{
 	}
 
 	private void initViews() {
-		
-		tv_test=(TextView) myView.findViewById(R.id.tv_test);
-		
 		mServer=Server.getInstance();
 		mPoolManager=ThreadPoolManager.getInstance();
 		mPoolManager.addTask(new Runnable() {
 			public void run() {
 				String strUTF8;
-				//try {
-					/*strUTF8 = URLDecoder.decode("gonglijun", "UTF-8");*/
 					recommandInfo=mServer.getBandsInfo("win", "1-gonglijun", "10", "20");
 					if(recommandInfo!=null)
 					{
@@ -83,20 +83,6 @@ public class FragmentMyCircle extends Fragment{
 						message.sendToTarget();
 					}
 					
-				    //test_str=mServer.getData("http://120.25.224.229:8888/recommend?access_token=1-gonglijun&num=2");
-					/*
-*/
-			/*	} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}  */
-				
-			/*	if(!TextUtils.isEmpty(test_str)&&test_str!=null)
-				{
-					Message message=mHandler.obtainMessage();
-					message.what=1;
-					message.sendToTarget();
-				}*/
 			}
 			});
 		

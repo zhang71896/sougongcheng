@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -68,6 +69,8 @@ public class Server {
 				return str;
 		}
 	
+	 
+	 
 	 /** 
 	  * 1.1返回status
 	  * @param reqStr
@@ -78,9 +81,16 @@ public class Server {
 		 String str = "";
 		 try {
 	            str=getData(reqStr);
-	            GsonBuilder gsonb = new GsonBuilder(); 
-		        Gson gson = gsonb.create();
-		        status= gson.fromJson(str,Status.class);
+	            JSONObject jsonObj = new JSONObject(str);
+	            int result=Integer.parseInt(jsonObj.getString("status"));
+	            status=new Status();
+	            if(result==0)
+	            {
+	            	status.status=0;
+	            }else
+	            {
+	            	status.status=result;
+	            }
 		    } catch (Exception e) {
 	            e.printStackTrace();
 	        }
@@ -98,9 +108,17 @@ public class Server {
 		 String str = "";
 		 try {
 	            str=getData(reqStr);
-	            GsonBuilder gsonb = new GsonBuilder(); 
-		        Gson gson = gsonb.create();
-		        accessStatus= gson.fromJson(str,AccessStatus.class);
+	            JSONObject jsonObj = new JSONObject(str);
+	            int result=Integer.parseInt(jsonObj.getString("status"));
+	            accessStatus=new AccessStatus();
+	            if(result==0)
+	            {
+	            	accessStatus.status=0;
+	            	accessStatus.access_token=jsonObj.getString("access_token");
+	            }else
+	            {
+	            	accessStatus.status=result;
+	            }
 		    } catch (Exception e) {
 	            e.printStackTrace();
 	        }
@@ -124,11 +142,9 @@ public class Server {
          		{
          			JSONArray jsonItemContentsTags=jsonItemContents.getJSONArray(5);
      				info.put(MConstants.RECOMEND_ITEMS_TAGS_NUMS, jsonItemContentsTags.length());
-                 	Log.e("tag","jsonItemContentsTags"+jsonItemContentsTags.length());
          			for(int z=0;z<jsonItemContentsTags.length();z++)
          			{
 	            			info.put("tag"+z, jsonItemContentsTags.get(z));
-	                     	Log.e("tag","jsonItemContentsTags.get(z)"+jsonItemContentsTags.get(z));
          			}
          		}else
          		{
@@ -196,9 +212,19 @@ public class Server {
 		 String str = "";
 			try {
 	            str=getData(reqStr);
-	            GsonBuilder gsonb = new GsonBuilder(); 
-		        Gson gson = gsonb.create();
-		        userInfo= gson.fromJson(str,UserInfo.class);
+	            JSONObject jsonObj = new JSONObject(str);
+	            int result=Integer.parseInt(jsonObj.getString("status"));
+	            userInfo=new UserInfo();
+	            if(result==0)
+	            {
+	            	userInfo.status=0;
+	            	userInfo.access_token=jsonObj.getString("access_token");
+	            	userInfo.sex=jsonObj.getInt("sex");
+	            	userInfo.telnum=jsonObj.getString("telnum");
+	            }else
+	            {
+	            	userInfo.status=result;
+	            }
 		    } catch (Exception e) {
 	            e.printStackTrace();
 	        }
@@ -269,11 +295,9 @@ public class Server {
 	            		if(j==0)
 	            		{
 	            			info.put(MConstants.RECOMEND_BANNERS_IMAGEURL, jsonBannersContents.get(j));
-	            			break;
 	            		}else if(j==1)
 	            		{
 	            			info.put(MConstants.RECOMEND_BANNERS_GOTOURL, jsonBannersContents.get(j));
-	            			break;
 	            		}
 	            	}
 	            	recommandInfo.banners.add(info);
@@ -295,7 +319,6 @@ public class Server {
 	 public RecommandInfo getBandsInfo(String type,String access_token,String page_num,String offset)
 	 {
 		  String reqStr=MConstants.URL+"list/"+type+"?access_token="+access_token+"&page_num="+page_num+"&offset="+offset;
-		// String reqStr="http://120.25.224.229:8888/list/win?access_token=1-gonglijun&page_num=10&offset=20";
 		 String str = "";
 			try {
 	            str=getData(reqStr);
@@ -336,13 +359,198 @@ public class Server {
 	 public Status StoreBandsInfo(String state,String access_token,String type,String id)
 	 {
 		 String reqStr=MConstants.URL+"favorite/"+state+"?access_token="+access_token+"&type="+type+"&id="+id;
+		 Log.e("tag","reqStr"+reqStr);
 		 String str = "";
 		 str=getData(reqStr);
 		 return getStatus(str);
 	 }
+	 /** *
+	  * 2.8 获取评论
+	  * @param type favorite/all/user
+	  * @param access_token
+	  * @param page_num
+	  * @param offset
+	  * @return
+	  */
+	 public CommentsInfo getCommments(String type,String access_token,String page_num,String offset)
+	 {
+		 //http://120.25.224.229:8888/get_comment/favorite?access_token=1-gonglijun&page_num=10&offset=0
+		 String reqStr=MConstants.URL+"get_comment/"+type+"?access_token="+access_token+"&page_num="+page_num+"&offset="+offset;
+		 String str = "";
+		 str=getData(reqStr);
+         try {
+			JSONObject jsonObj = new JSONObject(str);
+			int result=Integer.parseInt(jsonObj.getString("status"));
+			if(result==0)
+			{
+			commentsInfo.status=result;
+            JSONArray jsonComments=jsonObj.getJSONArray("comments");
+            commentsInfo.comments=new ArrayList<Map<String,Object>>();
+            for(int i=0;i<jsonComments.length();i++)
+            {
+            	Map<String,Object> info=new HashMap<String, Object>();
+            	JSONArray jsonCommentsContents=jsonComments.getJSONArray(i);
+            	for(int j=0;j<jsonCommentsContents.length();j++)
+            	{
+            		if(j==0)
+            		{
+            			info.put(MConstants.COMMENTS_ID, jsonCommentsContents.get(j));
+            		}else if(j==1)
+            		{
+            			info.put(MConstants.COMMENTS_USER_ID, jsonCommentsContents.get(j));
+            		}else if(j==2)
+            		{
+            			info.put(MConstants.COMMENTS_USER_NAME, jsonCommentsContents.get(j));
+            		}else if(j==3)
+            		{
+            			info.put(MConstants.COMMENTS_LIKE_NUMS, jsonCommentsContents.get(j));
+            		}else if(j==4)
+            		{
+            			info.put(MConstants.COMMENTS_SHARE_NUMS, jsonCommentsContents.get(j));
+            		}else if(j==5)
+            		{
+            			info.put(MConstants.COMMENTS_CONTENTS, jsonCommentsContents.get(j));
+            		}else if(j==6)
+            		{
+            			info.put(MConstants.COMMENTS_CREATE_TIME, jsonCommentsContents.get(j));
+            		}else if(j==7)
+            		{
+            			info.put(MConstants.COMMENTS_IS_LIKE, jsonCommentsContents.get(j));
+            		}
+            	}
+            	commentsInfo.comments.add(info);
+            }
+
+			}else
+			{
+			commentsInfo.status=result;	
+			}
+
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+         return commentsInfo;
+	 }
 	 
+	 /** 
+	  * 2.9评论管理
+	  * @param type add/del
+	  * @param access_token
+	  * @param content
+	  * @param parent_id
+	  * @return
+	  */
+	 public Status manageComment(String type,String access_token,String content,String parent_id)
+	 {
+		 String reqStr=MConstants.URL+"comment/"+type+"?access_token="+access_token+"&content="+content+"&parent_id="+parent_id;
+		 String str = "";
+		 str=getData(reqStr);
+		 status=getStatus(str);
+		 return status;
+	 }
 	 
+	 /** *
+	  * 2.10评论点赞
+	  * @param type add/del
+	  * @param access_token
+	  * @param id
+	  * @return
+	  */
+	 public Status likeComment(String type,String access_token,String id)
+	 {
+		 String reqStr=MConstants.URL+"comment_like_num/"+type+"?access_token="+access_token+"&id="+id;
+		 String str = "";
+		 str=getData(reqStr);
+		 status=getStatus(str);
+		 return status;
+	 }
 	 
+	 /** *
+	  * 2.11评论分享
+	  * @param access_token
+	  * @param id
+	  * @return
+	  */
+	 public Status shareComment(String access_token,String id)
+	 {
+		 String reqStr=MConstants.URL+"comment_forward_num/?access_token="+access_token+"&id="+id;
+		 String str = "";
+		 str=getData(reqStr);
+		 status=getStatus(str);
+		 return status;
+	 }
+	 
+	 /** *
+	  * 2.12 评论收藏
+	  * @param type
+	  * @param access_token
+	  * @param id
+	  * @return
+	  */
+	 public Status StoreComment(String type,String access_token,String id)
+	 {
+		 String reqStr=MConstants.URL+"comment_favorite/"+type+"?access_token="+access_token+"&id="+id;
+		 String str = "";
+		 str=getData(reqStr);
+		 status=getStatus(str);
+		 return status;
+	 }
+	 
+	 /** 
+	  * 2.13关键字搜索
+	  * @param type
+	  * @param access_token
+	  * @param keywords
+	  * @param page_num
+	  * @param offset
+	  * @return
+	  */
+	 public RecommandInfo searchKeyWords(String type,String access_token,String keywords,String page_num,String offset)
+	 {
+		 String reqStr=MConstants.URL+"search/"+type+"?access_token="+access_token+"&keywords="+keywords+"&page_num="+page_num+"&offset="+offset;
+		 String str = "";
+		 str=getData(reqStr);
+		 recommandInfo=new RecommandInfo();
+		try {
+			 JSONObject jsonObj = null;
+		     int result=Integer.parseInt(jsonObj.getString("status"));
+			 jsonObj = new JSONObject(str);
+			 if(result==0)
+			 {
+				  recommandInfo.status=0;
+				  JSONArray jsonItems=jsonObj.getJSONArray("items");
+		          recommandInfo.items=new ArrayList<Map<String,Object>>();
+		          recommandInfo.items=getItems(jsonItems); 
+			 }else 
+			 {
+				 recommandInfo.status=result;
+			 }
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return recommandInfo;
+	 }
+	 
+	 /** *
+	  * 2.14自定义搜索器
+	  * @param type
+	  * @param access_token
+	  * @param keywords
+	  * @return
+	  */
+	 public Status selfSearch(String type,String access_token,String keywords)
+	 {
+		 String reqStr=MConstants.URL+"keywords/"+type+"?access_token="+access_token+"&keywords="+keywords;
+		 String str = "";
+		 str=getData(reqStr);
+		 status=getStatus(str);
+		 return status;
+	 }
+
 	 protected String retrieveInputStream(HttpEntity httpEntity) {
      int length = (int) httpEntity.getContentLength();
      if (length < 0)

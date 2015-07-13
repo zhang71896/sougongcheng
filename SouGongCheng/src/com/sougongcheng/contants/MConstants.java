@@ -57,6 +57,23 @@ public class MConstants {
 	public static String RECOMEND_BANNERS_IMAGEURL="recommend_banners_imageurl";
 	
 	public static String RECOMEND_BANNERS_GOTOURL="recommend_banners_gotourl";
+	
+	//ÆÀÂÛ
+	public static String COMMENTS_ID="comments_id";
+	
+	public static String COMMENTS_USER_ID="comments_user_id";
+	
+	public static String COMMENTS_USER_NAME="comments_user_name";
+	
+	public static String COMMENTS_LIKE_NUMS="comments_like_nums";
+	
+	public static String COMMENTS_SHARE_NUMS="comments_share_nums";
+	
+	public static String COMMENTS_CONTENTS="comments_contents";
+	
+	public static String COMMENTS_CREATE_TIME="comments_create_time";
+	
+	public static String COMMENTS_IS_LIKE="comments_is_like";
 
 
 
