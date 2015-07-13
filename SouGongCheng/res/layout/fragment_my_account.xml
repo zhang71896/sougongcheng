@@ -114,7 +114,7 @@
  	    android:background="@color/line_gray"
  	    android:layout_marginLeft="@dimen/margin_right"
  	    />
- 	<!-- 最近浏览-->
+ 	<!-- 修改密码-->
  	<RelativeLayout
  	    android:id="@+id/rl_modify_ps"
  	    android:layout_width="match_parent"
@@ -129,6 +129,40 @@
  	        android:layout_height="wrap_content" 
  	        android:textSize="@dimen/text_size"
  	        android:text="修改密码"
+ 	         />
+ 	    <TextView
+ 	        android:layout_alignParentRight="true"
+ 	        android:layout_marginRight="@dimen/margin_right"
+ 	        android:layout_centerVertical="true"
+ 	        android:layout_width="wrap_content"
+ 	        android:layout_height="wrap_content"
+ 	        android:textColor="@color/right_arrow_gray"
+ 	        android:textSize="@dimen/right_array_size"
+ 	        android:text="@string/right_array"
+ 	        />
+ 	</RelativeLayout>
+ 	<TextView
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="1dp"
+ 	    android:background="@color/line_gray"
+ 	    android:layout_marginLeft="@dimen/margin_right"
+ 	    />
+ 	 	<!-- 修改个人信息-->
+ 	<RelativeLayout
+ 	    android:id="@+id/rl_modify_message"
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="@dimen/line_height"
+ 	    android:visibility="invisible"
+ 	    >
+ 	    <TextView
+ 	        android:layout_marginLeft="@dimen/margin_left"
+ 	        android:textColor="@color/background_material_dark"
+ 	        android:layout_centerVertical="true"
+ 	        android:id="@+id/tv_modify_message"
+ 	        android:layout_width="wrap_content"
+ 	        android:layout_height="wrap_content" 
+ 	        android:textSize="@dimen/text_size"
+ 	        android:text="修改个人信息"
  	         />
  	    <TextView
  	        android:layout_alignParentRight="true"

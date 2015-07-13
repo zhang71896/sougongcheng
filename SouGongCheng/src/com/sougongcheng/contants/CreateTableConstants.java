@@ -3,6 +3,7 @@ package com.sougongcheng.contants;
 public class CreateTableConstants {
 
 	
+	public static final String RECOMMEND_TABLE_NAME="recommend";
 	
 	public static final String RECOMMEND_TABLE="CREATE TABLE recommend(id INTEGER DEFAULT '1' NOT NULL PRIMARY KEY AUTOINCREMENT,"+
 			"access_token TEXT NOT NULL,"+//access_token
@@ -13,9 +14,7 @@ public class CreateTableConstants {
 			"recomend_items_end_time TEXT NOT NULL,"+//项目结束时间
 			"recomend_items_authors TEXT NOT NULL,"+//项目发布者
 			"recomend_items_store TEXT NOT NULL," +//项目收藏
-			"recomend_items_type TEXT NOT NULL,"+//项目类型
-			"recommend_banners_imageurl TEXT NOT NULL," +//图片url
-			"recommend_banners_gotourl TEXT NOT NULL)";//图片指向url
+			"recomend_items_type TEXT NOT NULL)";//项目类型
 	
 	public static final String COMMENT_TABLE="CREATE TABLE comment(id INTEGER DEFAULT '1' NOT NULL PRIMARY KEY AUTOINCREMENT,"+
 			"access_token TEXT NOT NULL,"+//access_token

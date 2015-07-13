@@ -28,6 +28,7 @@ import com.sougongcheng.bean.SearchMachine;
 import com.sougongcheng.bean.Status;
 import com.sougongcheng.bean.UserInfo;
 import com.sougongcheng.contants.MConstants;
+import com.sougongcheng.util.CommenTools;
 
 public class Server {
 	
@@ -120,7 +121,6 @@ public class Server {
 	            if(result==0)
 	            {
 	            	accessStatus.status=0;
-	            	accessStatus.access_token=jsonObj.getString("access_token");
 	            }else
 	            {
 	            	accessStatus.status=result;

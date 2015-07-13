@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -23,7 +24,6 @@ import com.sougongcheng.util.ThreadPoolManager;
 import com.test.finder.R;
 
 public class LoginActivity extends Activity implements OnClickListener{
-	
 	
 	private Button btn_login;
 	
@@ -60,6 +60,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 				mGetShareDatas.insertStringMessage(MConstants.TELNUM, userInfo.telnum);
 				mGetShareDatas.insertIntMessage(MConstants.SEX, userInfo.sex);
 				mGetShareDatas.insertIntMessage(MConstants.STATUS, userInfo.status);
+				mGetShareDatas.insertStringMessage(MConstants.PSW, et_password.getText().toString());
 				Intent intent=new Intent(LoginActivity.this, MainAct.class);
 				startActivity(intent);
 				finish();

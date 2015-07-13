@@ -39,6 +39,8 @@ public class MConstants {
 	public static String SEX="sex";
 	
 	public static String TELNUM="telnum";
+	
+	public static String PSW="psw";
 
 	
 	//Ê×Ò³ÍÆ¼ö

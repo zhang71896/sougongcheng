@@ -161,6 +161,8 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	private ProgressBar my_pb;
 	
 	private boolean isLoadMore=false;
+	
+	private int max_size=10;
     
 	// 切换当前显示的图片
 	private Handler handler = new Handler() {
@@ -173,20 +175,22 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==1)
 			{
+				//1和2是初次加载数据
 				isRefreshing=false;
-				changeDataSource(1);
+				changeDataSource(position,false);
 			}else if(msg.what==2)
 			{
 				isRefreshing=false;
-				changeDataSource(0);
+				changeDataSource(position,false);
+				//3和4刷新数据
 			}else if(msg.what==3)
 			{
 				isRefreshing=false;
-				changeDataSource(0);
+				changeDataSource(position,true);
 			}else if(msg.what==4)
 			{
 				isRefreshing=false;
-				changeDataSource(1);
+				changeDataSource(position,true);
 			}
 			
 		};
@@ -243,7 +247,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 	}
 	
 
-	private void changeDataSource(int j) {
+	private void changeDataSource(int j, boolean b) {
 		// TODO Auto-generated method stub
 		my_pb.setVisibility(View.INVISIBLE);
 		if(j==0)
@@ -290,6 +294,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 		// 设置一个监听器，当ViewPager中的页面改变时调用
 		mPager.setOnPageChangeListener(new MyPageChangeListener());
 		}
+		//加载数据不需要缓存
 		if(isLoadMore&&j!=0)
 		{
 			isLoadMore=false;
@@ -299,6 +304,9 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 			
 		}else
 		{
+		//更新的10条数据将会被缓存
+			
+			
 		mMapList=recommandInfo.items;
 		
 		adapterSearchProject=new AdapterSearchProject(getActivity(), mMapList, 0);
@@ -526,7 +534,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						{
 						type="win";
 						}
-						recommandInfo=mServer.getBandsInfo(type, access_token, "10", offsetPostion);
+						recommandInfo=mServer.getBandsInfo(type, access_token, max_size+"", offsetPostion);
 					}
 					if(recommandInfo!=null)
 					{
@@ -584,7 +592,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						{
 						type="win";
 						}
-						recommandInfo=mServer.getBandsInfo(type, access_token, "10", offsetPostion);
+						recommandInfo=mServer.getBandsInfo(type, access_token, max_size+"", offsetPostion);
 					}
 					if(recommandInfo!=null)
 					{
@@ -642,7 +650,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 				}else if(mPullRefreshListView.isFooterShown())
 				{
 					isLoadMore=true;
-					int nowOffsetPostion=Integer.parseInt(offsetPostion)+10;
+					int nowOffsetPostion=Integer.parseInt(offsetPostion)+max_size;
 					offsetPostion=nowOffsetPostion+"";
 					refreshDataSource(position);
 				}

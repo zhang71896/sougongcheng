@@ -27,12 +27,15 @@ public class DataAccess {
 	public long insertNews(Map<String,Object> mMaps)
 	{
 		ContentValues values=new ContentValues();
-		values.put(MConstants.END_TIME,mMaps.get(MConstants.END_TIME).toString());
-		values.put(MConstants.NEWS_AUTHOR,mMaps.get(MConstants.NEWS_AUTHOR).toString());
-		values.put(MConstants.NEWS_TITLE,mMaps.get(MConstants.NEWS_TITLE).toString());
-		values.put(MConstants.NEWS_TYPE,mMaps.get(MConstants.NEWS_TYPE).toString());
-		values.put(MConstants.END_TIME,mMaps.get(MConstants.START_TIME).toString());
-		//reuslt=dbBaseManager.insertData(CreateTableConstants.NEWS_TABLE, values);	
+		values.put(MConstants.RECOMEND_ITEMS_TAGS,mMaps.get(MConstants.RECOMEND_ITEMS_TAGS).toString());
+		values.put(MConstants.RECOMEND_ITEMS_ID,mMaps.get(MConstants.RECOMEND_ITEMS_ID).toString());
+		values.put(MConstants.RECOMEND_ITEMS_title,mMaps.get(MConstants.RECOMEND_ITEMS_title).toString());
+		values.put(MConstants.RECOMEND_ITEMS_START_TIME,mMaps.get(MConstants.RECOMEND_ITEMS_START_TIME).toString());
+		values.put(MConstants.RECOMEND_ITEMS_END_TIME,mMaps.get(MConstants.RECOMEND_ITEMS_END_TIME).toString());
+		values.put(MConstants.RECOMEND_ITEMS_AUTHORS,mMaps.get(MConstants.RECOMEND_ITEMS_AUTHORS).toString());
+		values.put(MConstants.RECOMEND_ITEMS_STORE,mMaps.get(MConstants.RECOMEND_ITEMS_STORE).toString());
+		values.put(MConstants.RECOMEND_ITEMS_TYPE,mMaps.get(MConstants.RECOMEND_ITEMS_TYPE).toString());
+		reuslt=dbBaseManager.insertData(CreateTableConstants.RECOMMEND_TABLE_NAME, values);	
 		return reuslt; 
 	}
 }
