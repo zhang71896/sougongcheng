@@ -97,6 +97,8 @@ public class CommentActivity extends Activity implements OnClickListener{
 	
 	HashMap<String,Object> commentInfo;
 	
+	private int sex;
+	
 	private Handler mHandler=new Handler()
 	{
 		public void handleMessage(Message msg) {
@@ -112,6 +114,7 @@ public class CommentActivity extends Activity implements OnClickListener{
 				commentInfo.put(MConstants.COMMENTS_ID, comments_id_str);
 				commentInfo.put(MConstants.COMMENTS_USER_NAME, name);
 				commentInfo.put(MConstants.COMMENTS_CONTENTS, et_comment_content.getText().toString());
+				commentInfo.put(MConstants.COMMENTS_USER_SEX, sex);
 				et_comment_content.setText("");
 				mapList.add(mapList.size(), commentInfo);
 				freashList();
@@ -153,6 +156,8 @@ public class CommentActivity extends Activity implements OnClickListener{
 		mGetShareDatas=GetShareDatas.getInstance(MConstants.USER_INFO, CommentActivity.this);
 		
 		access_token=mGetShareDatas.getStringMessage(MConstants.ACCESS_TOKEN, "");
+		
+		sex=mGetShareDatas.getIntMessage(MConstants.SEX,1);
 		
 		mPoolManager=ThreadPoolManager.getInstance();
 		

@@ -1,25 +1,20 @@
 package com.sougongcheng.server;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.util.Log;
-import android.widget.MultiAutoCompleteTextView.CommaTokenizer;
-
 import com.sougongcheng.bean.AccessStatus;
 import com.sougongcheng.bean.CommentsInfo;
 import com.sougongcheng.bean.HotKeyWordsInfo;
@@ -28,7 +23,6 @@ import com.sougongcheng.bean.SearchMachine;
 import com.sougongcheng.bean.Status;
 import com.sougongcheng.bean.UserInfo;
 import com.sougongcheng.contants.MConstants;
-import com.sougongcheng.util.CommenTools;
 
 public class Server {
 	
@@ -47,6 +41,8 @@ public class Server {
 	private SearchMachine searchMachine;
 	
 	private HotKeyWordsInfo hotKeyWordsInfo;
+	
+	private int TIME_OUT_DELAY=2000;
 	
 	private Server()
 	{
@@ -67,13 +63,16 @@ public class Server {
 		            request.setHeader("Accept", "application/json");
 		            request.setHeader("Content-type", "application/json");
 		            DefaultHttpClient httpClient = new DefaultHttpClient();
+		            httpClient.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, TIME_OUT_DELAY);
+		            httpClient.getParams().setIntParameter(HttpConnectionParams.CONNECTION_TIMEOUT, TIME_OUT_DELAY);// Á¬½Ó³¬Ê±  
 		            HttpResponse response = httpClient.execute(request);
 		            HttpEntity responseEntity = response.getEntity();
 		            str=retrieveInputStream(responseEntity);
+		    		return str;
 			    } catch (Exception e) {
 		            e.printStackTrace();
-		        }
-				return str;
+		    		return "err";
+		        } 
 		}
 	
 	 
@@ -86,11 +85,18 @@ public class Server {
 	 private Status getStatus(String reqStr)
 	 {
 		 String str = "";
+		 str=getData(reqStr);
+		 status=new Status();
+         if(str.equals("err"))
+         {
+        	 status.status=-1;
+         }else
+         {
 		 try {
-	            str=getData(reqStr);
+	            
 	            JSONObject jsonObj = new JSONObject(str);
 	            int result=Integer.parseInt(jsonObj.getString("status"));
-	            status=new Status();
+	           
 	            if(result==0)
 	            {
 	            	status.status=0;
@@ -101,6 +107,7 @@ public class Server {
 		    } catch (Exception e) {
 	            e.printStackTrace();
 	        }
+         }
 		 return status;
 	 }
 	 
@@ -113,11 +120,16 @@ public class Server {
 	 private AccessStatus getAccessStatus(String reqStr)
 	 {
 		 String str = "";
+		 str=getData(reqStr);
+         accessStatus=new AccessStatus();
+		 if(str.equals("err"))
+		 {
+			 accessStatus.status=-1;
+		 }else
+		 {
 		 try {
-	            str=getData(reqStr);
 	            JSONObject jsonObj = new JSONObject(str);
 	            int result=Integer.parseInt(jsonObj.getString("status"));
-	            accessStatus=new AccessStatus();
 	            if(result==0)
 	            {
 	            	accessStatus.status=0;
@@ -128,6 +140,7 @@ public class Server {
 		    } catch (Exception e) {
 	            e.printStackTrace();
 	        }
+		 }
 		 return accessStatus;
 		 
 	 }
@@ -218,11 +231,16 @@ public class Server {
 	 {
 		 String reqStr=MConstants.URL+"login?username="+userName+"&password="+passWord;
 		 String str = "";
+		 userInfo=new UserInfo();
+		  str=getData(reqStr);
+		  if(str.equals("err"))
+		  {
+			  userInfo.status=-1;
+		  }else
+		  {
 			try {
-	            str=getData(reqStr);
 	            JSONObject jsonObj = new JSONObject(str);
 	            int result=Integer.parseInt(jsonObj.getString("status"));
-	            userInfo=new UserInfo();
 	            if(result==0)
 	            {
 	            	userInfo.status=0;
@@ -236,6 +254,7 @@ public class Server {
 		    } catch (Exception e) {
 	            e.printStackTrace();
 	        }
+		  }
 			return userInfo;
 	 }
 	 
@@ -284,9 +303,14 @@ public class Server {
 		 String reqStr=MConstants.URL+"recommend?access_token="+access_token+"&num="+num;
 		// String reqStr="http://120.25.224.229:8888/recommend?access_token=1-gonglijun&num=2";
 		 String str = "";
+		 recommandInfo=new RecommandInfo();
+	      str=getData(reqStr);
+	      if(str.equals("err"))
+	      {
+	    	  recommandInfo.status=-1;
+	      }else
+	      {
 			try {
-	            str=getData(reqStr);
-	            recommandInfo=new RecommandInfo();
 	            JSONObject jsonObj = new JSONObject(str);
 	            recommandInfo.status=Integer.parseInt(jsonObj.getString("status"));
 	            JSONArray jsonItems=jsonObj.getJSONArray("items");
@@ -313,6 +337,7 @@ public class Server {
 		    } catch (Exception e) {
 	            e.printStackTrace();
 	        }
+	      }
 			return recommandInfo;
 	 }
 	 
@@ -327,10 +352,15 @@ public class Server {
 	 public RecommandInfo getBandsInfo(String type,String access_token,String page_num,String offset)
 	 {
 		  String reqStr=MConstants.URL+"list/"+type+"?access_token="+access_token+"&page_num="+page_num+"&offset="+offset;
-		 String str = "";
+		  String str = "";
+		  str=getData(reqStr);
+		  recommandInfo=new RecommandInfo();
+		  if(str.equals("err"))
+		  {
+			  recommandInfo.status=-1;  
+		  }else{
 			try {
-	            str=getData(reqStr);
-	            recommandInfo=new RecommandInfo();
+	           
 	            JSONObject jsonObj = new JSONObject(str);
 	            recommandInfo.status=Integer.parseInt(jsonObj.getString("status"));
 	            recommandInfo.items=new ArrayList<Map<String,Object>>();
@@ -339,6 +369,7 @@ public class Server {
 			 } catch (Exception e) {
 		            e.printStackTrace();
 		        }
+		  }
 		 return recommandInfo;
 	 }
 	 
@@ -367,7 +398,6 @@ public class Server {
 	 public Status StoreBandsInfo(String state,String access_token,String type,String id)
 	 {
 		 String reqStr=MConstants.URL+"favorite/"+state+"?access_token="+access_token+"&type="+type+"&id="+id;
-		 Log.e("tag","reqStr"+reqStr);
 		 return getStatus(reqStr);
 	 }
 	 /** *
@@ -383,9 +413,13 @@ public class Server {
 		 //http://120.25.224.229:8888/get_comment/favorite?access_token=1-gonglijun&page_num=10&offset=0
 		 String reqStr=MConstants.URL+"get_comment/"+type+"?access_token="+access_token+"&page_num="+page_num+"&offset="+offset+"&parent_id="+parent_id;
 		 String str = "";
-		 Log.e("tag", "reqStr:"+reqStr);
 		 str=getData(reqStr);
 		 commentsInfo=new CommentsInfo();
+		 if(str.equals("err"))
+		 {
+			 commentsInfo.status=-1; 
+		 }else
+		 {
          try {
 			JSONObject jsonObj = new JSONObject(str);
 			int result=Integer.parseInt(jsonObj.getString("status"));
@@ -445,7 +479,7 @@ public class Server {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		 }
          return commentsInfo;
 	 }
 	 
@@ -460,7 +494,6 @@ public class Server {
 	 public Status manageComment(String type,String access_token,String content,String parent_id)
 	 {
 		 String reqStr=MConstants.URL+"comment/"+type+"?access_token="+access_token+"&content="+content+"&parent_id="+parent_id;
-		 Log.e("tag", "reqStr:"+reqStr);
 		 status=getStatus(reqStr);
 		 return status;
 	 }
@@ -518,11 +551,16 @@ public class Server {
 	 public RecommandInfo searchKeyWords(String access_token,String type,String area,String trade,String hot,String page_num,String offset)
 	 {
 		 String reqStr=MConstants.URL+"search?access_token="+access_token+"&type="+type+"&area="+area+"&trade="+trade+"&hot="+hot+"&page_num="+page_num+"&offset="+offset;
-		
+		 String str = "";
+		 str=getData(reqStr);
 		 recommandInfo=new RecommandInfo();
+		 if(str.equals("err"))
+		 {
+			 recommandInfo.status=-1; 
+		 }else
+		 {
 		try {
-			 String str = "";
-			 str=getData(reqStr);
+			
 			 JSONObject jsonObj = null;
 			 jsonObj = new JSONObject(str);
 		     int result=Integer.parseInt(jsonObj.getString("status"));
@@ -540,6 +578,7 @@ public class Server {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		 }
 		return recommandInfo;
 	 }
 	 
@@ -581,10 +620,14 @@ public class Server {
 	 public SearchMachine getSearchMachine(String access_token,String id)
 	 {
 		 String reqStr=MConstants.URL+"get_keywords?access_token="+access_token+"&id="+id;
-		 Log.e("tag", "reqStr: "+reqStr);
 		 String str = "";
 		 str=getData(reqStr);
 		 searchMachine=new SearchMachine();
+		 if(str.equals("err"))
+		 {
+			 searchMachine.status=-1;
+		 }else
+		 {
 		 try {
 			 JSONObject jsonObj = null;
 			 jsonObj = new JSONObject(str);
@@ -655,6 +698,7 @@ public class Server {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		 }
 		 return searchMachine;
 	 }
 	 
@@ -669,7 +713,6 @@ public class Server {
 	 {
 		 String reqStr="";
 		 reqStr=MConstants.URL+"keywords/"+operation+"?access_token="+access_token+"&id="+id;	
-		 Log.e("tag", "setSearchMachineIsUsed:"+reqStr);
 		 status=getStatus(reqStr);
 		 return status;
 	 }
@@ -686,6 +729,11 @@ public class Server {
 		 str=getData(reqStr);
 		 hotKeyWordsInfo=new HotKeyWordsInfo();
 		 JSONObject jsonObj = null;
+		 if(str.equals("err"))
+		 {
+			 hotKeyWordsInfo.status=-1; 
+		 }else
+		 {
 		 try {
 			jsonObj = new JSONObject(str);
 			int result=Integer.parseInt(jsonObj.getString("status"));
@@ -766,8 +814,7 @@ public class Server {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	  
-		 
+		 }
 		 return hotKeyWordsInfo;
 	 }
 	 

@@ -175,7 +175,7 @@ public class FragmentMyCircle extends Fragment implements OnItemClickListener{
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(commentsInfo!=null)
+				if(commentsInfo!=null&&commentsInfo.status==0)
 				{
 				Message message=mHandler.obtainMessage();
 				message.what=1;

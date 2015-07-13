@@ -378,13 +378,13 @@ public class FragmentMyProject extends Fragment implements OnItemClickListener, 
 			public void run() {
 				recommandInfo=mServer.getBandsInfo(type, access_token, "10", "0");
 				searchMachine=mServer.getSearchMachine(access_token, "0");
-				if(recommandInfo!=null)
+				if(recommandInfo!=null&&recommandInfo.status==0)
 				{
 					Message message=mHandler.obtainMessage();
 					message.what=1;
 					message.sendToTarget();
 				}
-				if(searchMachine!=null)
+				if(searchMachine!=null&&searchMachine.status==0)
 				{
 					Message message=mHandler.obtainMessage();
 					message.what=2;

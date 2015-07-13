@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -312,7 +313,8 @@ import com.test.finder.R;
                 firstTime = secondTime;//更新firstTime 
                 return true; 
             } else { 
-            	android.os.Process.killProcess(android.os.Process.myPid());
+                ActivityManager am = (ActivityManager)getSystemService(MainAct.this.ACTIVITY_SERVICE);   
+                am.restartPackage(getPackageName()); 
                 System.exit(1);//否则退出程序 
             } 
         } 

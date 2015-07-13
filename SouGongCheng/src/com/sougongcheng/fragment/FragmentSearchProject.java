@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -37,7 +36,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -536,7 +534,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						}
 						recommandInfo=mServer.getBandsInfo(type, access_token, max_size+"", offsetPostion);
 					}
-					if(recommandInfo!=null)
+					if(recommandInfo!=null&&recommandInfo.status==0)
 					{
 						Message message=mHandler.obtainMessage();
 						if(i==0)
@@ -594,7 +592,7 @@ public class FragmentSearchProject extends Fragment implements OnClickListener, 
 						}
 						recommandInfo=mServer.getBandsInfo(type, access_token, max_size+"", offsetPostion);
 					}
-					if(recommandInfo!=null)
+					if(recommandInfo!=null&&recommandInfo.status==0)
 					{
 						Message message=mHandler.obtainMessage();
 						if(i==0)
